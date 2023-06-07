@@ -35,19 +35,18 @@ LineSelectionStyle::LineSelectionStyle()
 void LineSelectionStyle::OnRightButtonDown()
 {
     if(lassoStarted){
-        this->annotation->addPolyLine(polyLine);
-        polylinePoints = vtkSmartPointer<vtkPoints>::NewInstance(polylinePoints);
-        polyLineSegments = vtkSmartPointer<vtkCellArray>::NewInstance(polyLineSegments);
+        ren->RemoveActor(assembly);
         this->assembly->RemovePart(sphereAssembly);
         sphereAssembly = vtkSmartPointer<vtkPropAssembly>::NewInstance(sphereAssembly);
         polyLine.clear();
-        reachedID = 0;
         lastVertex = nullptr;
         firstVertex = nullptr;
         lassoStarted = false;
-        this->assembly->RemovePart(splineActor);
         this->assembly->Modified();
-        modifySelectedLines();
+        this->ren->AddActor(this->assembly);
+        this->ren->Render();
+        this->qvtkwidget->update();
+        this->qvtkwidget->renderWindow()->Render();
 
     }
 }
@@ -59,6 +58,7 @@ void LineSelectionStyle::OnMouseMove()
 
 void LineSelectionStyle::OnLeftButtonDown()
 {
+    if(mesh == nullptr) return;
     if(this->Interactor->GetControlKey())
 
         if(!lassoStarted)
@@ -95,9 +95,9 @@ void LineSelectionStyle::OnLeftButtonDown()
                     }
                     v_ = t->getNextVertex(v_);
                 }
+                delete p;
 
                 vtkIdType pointID = static_cast<vtkIdType>(std::stoi(v->getId()));
-                vtkSmartPointer<vtkParametricSpline> spline = vtkSmartPointer<vtkParametricSpline>::New();
                 auto actualVertex = mesh->getVertex(static_cast<unsigned long>(pointID));
                 vtkSmartPointer<vtkSphereSource> sphereSource = vtkSmartPointer<vtkSphereSource>::New();
                 sphereSource->SetCenter(actualVertex->getX(), actualVertex->getY(), actualVertex->getZ());
@@ -108,47 +108,17 @@ void LineSelectionStyle::OnLeftButtonDown()
                 actor->GetProperty()->SetColor(0,0,1);
                 actor->SetMapper(mapper);
                 sphereAssembly->AddPart(actor);
-                assembly->AddPart(sphereAssembly);
                 if(firstVertex == nullptr){
                     firstVertex = actualVertex;
                     polyLine.push_back(firstVertex);
-                    polylinePoints->InsertNextPoint(points->GetPoint(static_cast<vtkIdType>(std::stoi(firstVertex->getId()))));
                 }if(lastVertex != nullptr && lastVertex != actualVertex){
-                    auto newSegment = mesh->computeShortestPath(lastVertex, actualVertex, DistanceType::EUCLIDEAN_DISTANCE, false);
-                    polyLine.insert(polyLine.end(), newSegment.begin(), newSegment.end());
-                    for(unsigned int i = 0; i < newSegment.size(); i++){
-                        std::shared_ptr<Vertex> v1;
-                        if(i > 0)
-                            v1 = newSegment[i - 1];
-                        else
-                            v1 = lastVertex;
-                        auto v2 = newSegment[i];
-                        auto e = v1->getCommonEdge(v2);
-                        e->addFlag(FlagType::SELECTED);
-                        polylinePoints->InsertNextPoint(points->GetPoint(static_cast<vtkIdType>(std::stoi(v2->getId()))));
-                        reachedID++;
-                        vtkSmartPointer<vtkLine> line = vtkSmartPointer<vtkLine>::New();
-                        line->GetPointIds()->SetNumberOfIds(2);
-                        line->GetPointIds()->SetId(0, static_cast<vtkIdType>(reachedID - 1));
-                        line->GetPointIds()->SetId(1, static_cast<vtkIdType>(reachedID));
-                        polyLineSegments->InsertNextCell(line);
-                    }
-                    ren->RemoveActor(assembly);
-                    this->assembly->RemovePart(splineActor);
-                    // Setup actor and mapper
-                    vtkSmartPointer<vtkPolyData> splineData = vtkSmartPointer<vtkPolyData>::New();
-                    vtkSmartPointer<vtkPolyDataMapper> splineMapper = vtkSmartPointer<vtkPolyDataMapper>::New();
-                    splineData->SetPoints(polylinePoints);
-                    splineData->SetLines(polyLineSegments);
-                    splineMapper->SetInputData(splineData);
-                    splineActor->SetMapper(splineMapper);
-                    splineActor->GetProperty()->SetLineWidth(5);
-                    splineActor->GetProperty()->SetColor(255,0,0);
-                    this->assembly->AddPart(splineActor);
-                    ren->AddActor(assembly);
-                    ren->Render();
-                    ren->GetRenderWindow()->Render();
+                    auto newPolyline = mesh->computeShortestPath(lastVertex, actualVertex, DistanceType::COMBINED_DISTANCE, true, false);
+                    polyLine.insert(polyLine.end(), newPolyline.begin(), newPolyline.end());
+                    std::vector<std::vector<std::shared_ptr<Vertex> > > newPolylines = {newPolyline};
+                    defineSelection(newPolylines);
+
                 }
+                draw();
                 lastVertex = actualVertex;
             }
         }
@@ -162,28 +132,9 @@ void LineSelectionStyle::OnLeftButtonUp()
 
 }
 
-void LineSelectionStyle::modifySelectedLines()
-{
-    if(showSelectedPoints)
-    {
-        this->annotation->setMesh(mesh);
-        this->annotation->setMeshPoints(mesh->getMeshVertices());
-        this->annotation->update();
-        this->annotation->draw(assembly);
-    }
-    else{
-        for(uint i = 0; i < mesh->getEdgesNumber(); i++)
-        {
-            auto e = mesh->getEdge(i);
-            e->removeFlag(FlagType::SELECTED);
-        }
-    }
-    this->mesh->draw(assembly);
-    this->qvtkwidget->update();
-}
-
 void LineSelectionStyle::resetSelection()
 {
+    if(mesh == nullptr) return;
     polyLine.clear();
     reachedID = 0;
     lastVertex = nullptr;
@@ -203,12 +154,37 @@ void LineSelectionStyle::resetSelection()
 
 }
 
+void LineSelectionStyle::defineSelection(std::vector<std::vector<std::shared_ptr<Vertex> > > polylines)
+{
+    for(uint i = 0; i < polylines.size(); i++)
+    {
+        polylinePoints->InsertNextPoint(points->GetPoint(static_cast<vtkIdType>(std::stoi(polylines.at(i).at(0)->getId()))));
+        for(uint j = 1; j < polylines.at(i).size(); j++)
+        {
+            std::shared_ptr<Vertex> v1 = polylines.at(i).at(j - 1);
+            auto v2 = polylines.at(i).at(j);
+            auto e = v1->getCommonEdge(v2);
+            e->addFlag(FlagType::SELECTED);
+            polylinePoints->InsertNextPoint(points->GetPoint(static_cast<vtkIdType>(std::stoi(v2->getId()))));
+            reachedID++;
+            vtkSmartPointer<vtkLine> line = vtkSmartPointer<vtkLine>::New();
+            line->GetPointIds()->SetNumberOfIds(2);
+            line->GetPointIds()->SetId(0, static_cast<vtkIdType>(reachedID - 1));
+            line->GetPointIds()->SetId(1, static_cast<vtkIdType>(reachedID));
+            polyLineSegments->InsertNextCell(line);
+        }
+        reachedID++;
+        annotation->addPolyLine(polylines.at(i));
+    }
+}
+
 void LineSelectionStyle::finalizeAnnotation(std::string id, std::string tag, unsigned char color[])
 {
+    if(mesh == nullptr) return;
     vector<std::shared_ptr<SemantisedTriangleMesh::Edge> > selectedEdges;
     for(uint i = 0; i < mesh->getEdgesNumber(); i++){
         auto e = mesh->getEdge(i);
-        if(e->searchFlag(FlagType::SELECTED))
+        if(e->searchFlag(FlagType::SELECTED) >= 0)
             selectedEdges.push_back(e);
     }
 
@@ -218,8 +194,8 @@ void LineSelectionStyle::finalizeAnnotation(std::string id, std::string tag, uns
         this->annotation->setTag(tag);
         this->annotation->setColor(color);
         this->annotation->setMesh(mesh);
+        this->annotation->update();
         this->mesh->addAnnotation(annotation);
-        this->mesh->update();
         this->mesh->draw(assembly);
         this->annotation = std::make_shared<DrawableLineAnnotation>();
         this->annotation->setId("0");
@@ -228,6 +204,34 @@ void LineSelectionStyle::finalizeAnnotation(std::string id, std::string tag, uns
         this->annotation->setColor(color);
         this->resetSelection();
     }
+    emit(updateView());
+}
+
+void LineSelectionStyle::draw()
+{
+    ren->RemoveActor(assembly);
+    this->assembly->RemovePart(splineActor);
+    this->assembly->RemovePart(sphereAssembly);
+
+    // Setup actor and mapper
+    if(annotation->getPolyLines().size() > 0 || polyLine.size() > 1)
+    {
+        vtkSmartPointer<vtkPolyData> splineData = vtkSmartPointer<vtkPolyData>::New();
+        vtkSmartPointer<vtkPolyDataMapper> splineMapper = vtkSmartPointer<vtkPolyDataMapper>::New();
+        splineData->SetPoints(polylinePoints);
+        splineData->SetLines(polyLineSegments);
+        splineMapper->SetInputData(splineData);
+        splineActor->SetMapper(splineMapper);
+        splineActor->GetProperty()->SetLineWidth(5);
+        splineActor->GetProperty()->SetColor(255,0,0);
+        this->assembly->AddPart(splineActor);
+    }
+    this->assembly->AddPart(sphereAssembly);
+    this->assembly->Modified();
+    ren->AddActor(assembly);
+    ren->Render();
+    ren->GetRenderWindow()->Render();
+    this->qvtkwidget->update();
 }
 
 

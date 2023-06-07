@@ -1,4 +1,5 @@
 #include "measurestyle.hpp"
+#include "vtkSphereSource.h"
 
 #include <geometricattribute.hpp>
 #include <drawableeuclideanmeasure.hpp>
@@ -19,6 +20,7 @@
 #include <vtkFeatureEdges.h>
 #include <vtkPropPicker.h>
 #include <vtkRenderer.h>
+#include <vtkProperty.h>
 
 using namespace std;
 using namespace SemantisedTriangleMesh;
@@ -82,7 +84,7 @@ void MeasureStyle::manageRulerMovement(std::shared_ptr<SemantisedTriangleMesh::V
 
 void MeasureStyle::manageTapeMovement(std::shared_ptr<SemantisedTriangleMesh::Vertex> start, std::shared_ptr<SemantisedTriangleMesh::Vertex> end)
 {
-    auto path = mesh->computeShortestPath(start, end, DistanceType::EUCLIDEAN_DISTANCE, true);
+    auto path = mesh->computeShortestPath(start, end, DistanceType::EUCLIDEAN_DISTANCE,  true, true);
     path.insert(path.begin(), start);
     measurePath.insert(measurePath.end(), path.begin(), path.end());
     Point measureVector;
@@ -256,7 +258,8 @@ void MeasureStyle::reset()
     }
 
     onCreationAttribute->setValue(new double(0.0));
-//    /onCreationAttribute->setRenderer(meshRenderer);
+    onCreationAttribute->setDrawAttribute(true);
+    onCreationAttribute->setDrawValue(true);
     onCreationAttribute->setMesh(mesh);
 
     boundingOrigin = nullptr;
@@ -266,11 +269,10 @@ void MeasureStyle::reset()
     leftPressed = false;
     middlePressed = false;
     meshRenderer->RemoveActor(measureAssembly);
-    measureAssembly = vtkSmartPointer<vtkPropAssembly>::New();
     cellPicker = vtkSmartPointer<vtkCellPicker>::NewInstance(cellPicker);
     cellPicker->SetPickFromList(1);
     cellPicker->AddPickList(mesh->getSurfaceActor());
-    updateView();
+    emit(updateView());
 
 }
 
@@ -285,21 +287,6 @@ std::shared_ptr<DrawableAttribute> MeasureStyle::finalizeAttribute(unsigned int 
     onCreationAttribute = nullptr;
     reset();
     return returnAttribute;
-}
-
-void MeasureStyle::updateView()
-{
-    meshRenderer->RemoveActor(measureAssembly);
-    if(drawAttributes)
-    {
-        //onCreationAttribute->setRenderer(meshRenderer);
-        onCreationAttribute->draw(measureAssembly);
-    }
-
-    measureAssembly->Modified();
-    meshRenderer->AddActor(measureAssembly);
-    qvtkwidget->update();
-
 }
 
 void MeasureStyle::OnMouseMove()
@@ -333,9 +320,11 @@ void MeasureStyle::OnMouseMove()
                 exit(4343); //IMPOSSIBLE
         }
         onCreationAttribute->update();
+        if(drawAttributes)
+            onCreationAttribute->draw(measureAssembly);
     }
     if(leftPressed || middlePressed)
-        updateView();
+        emit(updateView());
     vtkInteractorStyleTrackballCamera::OnMouseMove();
 
 }
@@ -387,7 +376,6 @@ void MeasureStyle::OnLeftButtonDown()
                 }
                 v_i = mesh->getTriangle(cellID)->getNextVertex(v_i);
             }
-
             for(unsigned int i = 0; i < mesh->getAnnotations().size(); i++){
                 if(mesh->getAnnotations()[i]->isPointInAnnotation(v) && dynamic_pointer_cast<DrawableAnnotation>(mesh->getAnnotations()[i])->getSelected()){
                     if(measureType == MeasureType::HEIGHT)
@@ -403,6 +391,7 @@ void MeasureStyle::OnLeftButtonDown()
                             {
                                 measurePath.push_back(v);
                                 auto eucAtt = dynamic_pointer_cast<DrawableEuclideanMeasure>(onCreationAttribute);
+                                eucAtt->addMeasurePointID(std::stoi(v->getId()));
                                 eucAtt->addMeasurePointID(std::stoi(v->getId()));
                                 break;
                             }
@@ -432,9 +421,13 @@ void MeasureStyle::OnLeftButtonDown()
                     }
 
                     onCreationAttribute->update();
-                    updateView();
+                    if(drawAttributes)
+                        onCreationAttribute->draw(measureAssembly);
+                    measureAssembly->Modified();
                 }
             }
+
+            emit(updateView());
 
         }
     }else
@@ -448,6 +441,9 @@ void MeasureStyle::OnLeftButtonUp()
     if(measureStarted && measureType == MeasureType::BOUNDING)
         measureStarted = false;
 
+    onCreationAttribute->update();
+    if(drawAttributes)
+        onCreationAttribute->draw(measureAssembly);
     vtkInteractorStyleTrackballCamera::OnLeftButtonUp();
 }
 
@@ -466,7 +462,7 @@ void MeasureStyle::OnRightButtonDown()
         } else
             measureStarted = false;
         onCreationAttribute->update();
-        updateView();
+        emit(updateView());
     }
 
     vtkInteractorStyleTrackballCamera::OnRightButtonDown();
@@ -490,13 +486,13 @@ void MeasureStyle::OnMiddleButtonDown()
 
 void MeasureStyle::OnMouseWheelBackward()
 {
-    updateView();
+    emit(updateView());
     vtkInteractorStyleTrackballCamera::OnMouseWheelBackward();
 }
 
 void MeasureStyle::OnMouseWheelForward()
 {
-    updateView();
+    emit(updateView());
     vtkInteractorStyleTrackballCamera::OnMouseWheelForward();
 }
 
@@ -555,5 +551,14 @@ bool MeasureStyle::getDrawAttributes() const
 void MeasureStyle::setDrawAttributes(bool value)
 {
     drawAttributes = value;
-    updateView();
+}
+
+vtkSmartPointer<vtkPropAssembly> MeasureStyle::getMeasureAssembly() const
+{
+    return measureAssembly;
+}
+
+void MeasureStyle::setMeasureAssembly(vtkSmartPointer<vtkPropAssembly> newMeasureAssembly)
+{
+    measureAssembly = newMeasureAssembly;
 }

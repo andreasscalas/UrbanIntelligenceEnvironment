@@ -1,4 +1,5 @@
 #include "triangleselectionstyle.hpp"
+#include "vtkRenderWindow.h"
 
 #include <vtkVertexGlyphFilter.h>
 #include <vtkPointData.h>
@@ -12,6 +13,8 @@
 #include <vtkPlanes.h>
 #include <vtkProperty.h>
 #include <vtkPolyDataMapper.h>
+#include <vtkRenderLargeImage.h>
+#include <vtkLine.h>
 
 #include <chrono>
 using namespace std::chrono;
@@ -30,15 +33,16 @@ TriangleSelectionStyle::TriangleSelectionStyle(){
     lastVertex = nullptr;
     this->annotation = std::make_shared<DrawableSurfaceAnnotation>();
     splinePoints = vtkSmartPointer<vtkPoints>::New();
-    SplineActor  = vtkSmartPointer<vtkActor>::New();
-    SplineActor->GetProperty()->SetColor(1.0,0,0);
-    SplineActor->GetProperty()->SetLineWidth(3.0);
+    splineActor  = vtkSmartPointer<vtkActor>::New();
+    splineActor->GetProperty()->SetColor(1.0,0,0);
+    splineActor->GetProperty()->SetLineWidth(3.0);
     sphereAssembly = vtkSmartPointer<vtkPropAssembly>::New();          //Assembly of actors
     this->cellPicker = vtkSmartPointer<vtkCellPicker>::New();
 }
 
 void TriangleSelectionStyle::OnRightButtonDown(){
 
+    if(mesh == nullptr) return;
     //If the user is trying to pick a point...
     //The click position of the mouse is takenannotatedTriangles
     int x, y;
@@ -52,13 +56,13 @@ void TriangleSelectionStyle::OnRightButtonDown(){
     vtkIdType pickedTriangleID = this->cellPicker->GetCellId();
     if(pickedTriangleID > 0 && pickedTriangleID < this->mesh->getTrianglesNumber()){
 
-        vector<unsigned long> selected;
+        vector<std::string> selected;
         if(lasso_started){
             auto t = mesh->getTriangle(static_cast<unsigned long>(pickedTriangleID));
             std::dynamic_pointer_cast<DrawableSurfaceAnnotation>(this->annotation)->addOutline(polygonContour);
             auto innerTriangles = mesh->regionGrowing(polygonContour, t);
             for(auto tit = innerTriangles.begin(); tit != innerTriangles.end(); tit++){
-                selected.push_back(std::stoi((*tit)->getId()));
+                selected.push_back((*tit)->getId());
             }
             splinePoints = vtkSmartPointer<vtkPoints>::New();
             assembly->RemovePart(sphereAssembly);
@@ -67,9 +71,9 @@ void TriangleSelectionStyle::OnRightButtonDown(){
             lastVertex = nullptr;
             firstVertex = nullptr;
             lasso_started = false;
-            this->assembly->RemovePart(SplineActor);
+            this->assembly->RemovePart(splineActor);
         }else
-            selected.push_back(static_cast<unsigned long>(pickedTriangleID));
+            selected.push_back(std::to_string(static_cast<unsigned long>(pickedTriangleID)));
 
         defineSelection(selected);
 
@@ -129,7 +133,6 @@ void TriangleSelectionStyle::OnLeftButtonDown(){
                         }
 
                         vtkIdType pointID = static_cast<vtkIdType>(std::stoi(v->getId()));
-                        vtkSmartPointer<vtkParametricSpline> spline = vtkSmartPointer<vtkParametricSpline>::New();
                         auto actualVertex = mesh->getVertex(static_cast<unsigned long>(pointID));
                         vtkSmartPointer<vtkSphereSource> sphereSource = vtkSmartPointer<vtkSphereSource>::New();
                         sphereSource->SetCenter(actualVertex->getX(), actualVertex->getY(), actualVertex->getZ());
@@ -140,28 +143,13 @@ void TriangleSelectionStyle::OnLeftButtonDown(){
                         actor->GetProperty()->SetColor(0,0,1);
                         actor->SetMapper(mapper);
                         sphereAssembly->AddPart(actor);
-                        assembly->AddPart(sphereAssembly);
                         if(firstVertex == nullptr){
                             firstVertex = actualVertex;
                             polygonContour.push_back(firstVertex);
                         }if(lastVertex != nullptr && lastVertex != actualVertex){
-                            auto newContourSegment = mesh->computeShortestPath(lastVertex, actualVertex, DistanceType::COMBINED_DISTANCE, false);
+                            auto newContourSegment = mesh->computeShortestPath(lastVertex, actualVertex, DistanceType::COMBINED_DISTANCE, true, false);
                             polygonContour.insert(polygonContour.end(), newContourSegment.begin(), newContourSegment.end());
-                            for(unsigned int i = 0; i < newContourSegment.size(); i++)
-                                splinePoints->InsertNextPoint(Triangles->GetPoint(static_cast<vtkIdType>(std::stoi(newContourSegment[i]->getId()))));
-                            spline->SetPoints(splinePoints);
-                            vtkSmartPointer<vtkParametricFunctionSource> functionSource = vtkSmartPointer<vtkParametricFunctionSource>::New();
-                            functionSource->SetParametricFunction(spline);
-                            functionSource->Update();
-                            ren->RemoveActor(assembly);
-                            this->assembly->RemovePart(SplineActor);
-                            // Setup actor and mapper
-                            vtkSmartPointer<vtkPolyDataMapper> splineMapper = vtkSmartPointer<vtkPolyDataMapper>::New();
-                            splineMapper->SetInputConnection(functionSource->GetOutputPort());
-                            SplineActor->SetMapper(splineMapper);
-                            SplineActor->GetProperty()->SetLineWidth(5);
-                            this->assembly->AddPart(SplineActor);
-                            ren->AddActor(assembly);
+                            draw();
                         }
                         lastVertex = actualVertex;
                     }
@@ -198,7 +186,7 @@ void TriangleSelectionStyle::OnLeftButtonUp(){
                 #if VTK_MAJOR_VERSION <= 5
                     extractGeometry->SetInput(this->Triangles);
                 #else
-                    extractGeometry->SetInputData(this->Triangles);
+                    extractGeometry->SetInputData(this->triangles);
                 #endif
                     extractGeometry->Update();
 
@@ -216,13 +204,13 @@ void TriangleSelectionStyle::OnLeftButtonUp(){
                 }else
                     selected = glyphFilter->GetOutput();
 
-                vector<unsigned long> newlySelected;
+                vector<std::string> newlySelected;
                 vtkSmartPointer<vtkIdTypeArray> ids = vtkIdTypeArray::SafeDownCast(selected->GetPointData()->GetArray("OriginalMeshIds"));
                 for(vtkIdType i = 0; ids!=nullptr && i < ids->GetNumberOfTuples(); i++){
                     vtkSmartPointer<vtkIdList> tids = vtkSmartPointer<vtkIdList>::New();
-                    Triangles->GetPointCells(ids->GetValue(i), tids);
+                    triangles->GetPointCells(ids->GetValue(i), tids);
                     for(vtkIdType j = 0; j < tids->GetNumberOfIds(); j++){
-                        newlySelected.push_back(static_cast<unsigned long>(tids->GetId(j)));
+                        newlySelected.push_back(std::to_string(static_cast<unsigned long>(tids->GetId(j))));
                     }
                 }
 
@@ -235,18 +223,20 @@ void TriangleSelectionStyle::OnLeftButtonUp(){
 
 }
 
-void TriangleSelectionStyle::SetTriangles(vtkSmartPointer<vtkPolyData> triangles) {this->Triangles = triangles;}
+void TriangleSelectionStyle::SetTriangles(vtkSmartPointer<vtkPolyData> triangles) {this->triangles = triangles;}
 
 void TriangleSelectionStyle::resetSelection(){
 
+    if(mesh == nullptr) return;
     for(uint i = 0; i < mesh->getTrianglesNumber(); i++){
         auto t = mesh->getTriangle(i);
         t->removeFlag(FlagType::SELECTED);
     }
 }
 
-void TriangleSelectionStyle::defineSelection(vector<unsigned long> selected){
-    for(vector<unsigned long>::iterator it = selected.begin(); it != selected.end(); it++){
+void TriangleSelectionStyle::defineSelection(std::vector<string> selected){
+    if(mesh == nullptr) return;
+    for(auto it = selected.begin(); it != selected.end(); it++){
         auto t = mesh->getTriangle(*it);
         if(selectionMode)
         {
@@ -259,8 +249,8 @@ void TriangleSelectionStyle::defineSelection(vector<unsigned long> selected){
             mesh->setTriangleColor(t->getId(), mesh->ORIGINAL_COLOR);
         }
     }
-    this->mesh->draw(assembly);
-    emit(updateView());
+
+    draw();
 
 }
 
@@ -328,10 +318,52 @@ void TriangleSelectionStyle::finalizeAnnotation(std::string id, string tag, unsi
         this->annotation->setMesh(mesh);
         this->mesh->addAnnotation(annotation);
         std::dynamic_pointer_cast<DrawableSurfaceAnnotation>(this->annotation)->update();
-        this->mesh->draw(assembly);
         this->annotation = std::make_shared<DrawableSurfaceAnnotation>();
         emit(updateView());
     }
+}
+
+void TriangleSelectionStyle::draw()
+{
+    ren->RemoveActor(assembly);
+    this->assembly->RemovePart(splineActor);
+    this->assembly->RemovePart(sphereAssembly);
+    this->assembly->RemovePart(mesh->getCanvas());
+    if(selectionType == SelectionType::LASSO_AREA)
+    {
+
+        auto polyLineSegments = vtkSmartPointer<vtkCellArray>::New();
+        auto polylinePoints = vtkSmartPointer<vtkPoints>::New();
+        if(polygonContour.size() > 1)
+        {
+            polylinePoints->InsertNextPoint(triangles->GetPoint(static_cast<vtkIdType>(std::stoi(polygonContour[0]->getId()))));
+            for(unsigned int i = 1; i < polygonContour.size(); i++)
+            {
+                polylinePoints->InsertNextPoint(triangles->GetPoint(static_cast<vtkIdType>(std::stoi(polygonContour[i]->getId()))));
+                vtkSmartPointer<vtkLine> line = vtkSmartPointer<vtkLine>::New();
+                line->GetPointIds()->SetNumberOfIds(2);
+                line->GetPointIds()->SetId(0, static_cast<vtkIdType>(i - 1));
+                line->GetPointIds()->SetId(1, static_cast<vtkIdType>(i));
+                polyLineSegments->InsertNextCell(line);
+            }
+            auto polydata = vtkSmartPointer<vtkPolyData>::New();
+            polydata->SetPoints(polylinePoints);
+            polydata->SetLines(polyLineSegments);
+            vtkSmartPointer<vtkPolyDataMapper> splineMapper = vtkSmartPointer<vtkPolyDataMapper>::New();
+            splineMapper->SetInputData(polydata);
+            splineActor->SetMapper(splineMapper);
+            splineActor->GetProperty()->SetLineWidth(5);
+            this->assembly->AddPart(splineActor);
+        }
+        this->assembly->AddPart(sphereAssembly);
+    } else
+        mesh->draw(assembly);
+
+    this->assembly->Modified();
+    ren->AddActor(assembly);
+    ren->Render();
+    ren->GetRenderWindow()->Render();
+    this->qvtkWidget->update();
 }
 
 QVTKOpenGLNativeWidget *TriangleSelectionStyle::getQvtkWidget() const

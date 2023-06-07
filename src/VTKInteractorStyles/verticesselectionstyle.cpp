@@ -1,3 +1,4 @@
+#include "vtkRenderer.h"
 #include <verticesselectionstyle.hpp>
 
 #include <vtkSphereSource.h>
@@ -24,6 +25,7 @@ VerticesSelectionStyle::VerticesSelectionStyle() {
     selectionMode = true;
     visiblePointsOnly = true;
     leftPressed = false;
+    this->assembly = vtkSmartPointer<vtkPropAssembly>::New();
     this->pointPicker = vtkSmartPointer<vtkPointPicker>::New();
     this->sphereAssembly = vtkSmartPointer<vtkPropAssembly>::New();
     this->annotation = std::make_shared<DrawablePointAnnotation>();
@@ -44,13 +46,13 @@ void VerticesSelectionStyle::OnRightButtonDown() {
     int picked = picker->Pick(x, y, 0, this->GetCurrentRenderer());
     picker->GetPickPosition(pickPos);
 
-    std::vector<unsigned long> selected;
+    std::vector<std::shared_ptr<SemantisedTriangleMesh::Vertex> > selected;
     SemantisedTriangleMesh::Point pickedPos(pickPos[0], pickPos[1], pickPos[2]);
     if(picked >= 0)
     {
-        selected.push_back(std::stoi(mesh->getClosestPoint(pickedPos)->getId()));
+        selected.push_back(mesh->getClosestPoint(pickedPos));
         defineSelection(selected);
-        modifySelectedPoints();
+        draw();
     }
 
 	vtkInteractorStyleRubberBandPick::OnRightButtonDown();
@@ -86,7 +88,7 @@ void VerticesSelectionStyle::OnLeftButtonUp() {
 #if VTK_MAJOR_VERSION <= 5
 		extractGeometry->SetInput(this->Points);
 #else
-        extractGeometry->SetInputData(this->Points);
+        extractGeometry->SetInputData(this->points);
 #endif
 		extractGeometry->Update();
 
@@ -111,12 +113,12 @@ void VerticesSelectionStyle::OnLeftButtonUp() {
 		if (ids == nullptr)
 			return;
 
-		std::vector<unsigned long> selectedPoints;
+        std::vector<std::shared_ptr<Vertex> > selectedPoints;
 		for (vtkIdType i = 0; i < ids->GetNumberOfTuples(); i++)
-			selectedPoints.push_back(static_cast<unsigned long>(ids->GetValue(i)));
+            selectedPoints.push_back(mesh->getVertex(ids->GetValue(i)));
 
         defineSelection(selectedPoints);
-        modifySelectedPoints();
+        draw();
     }
 
 }
@@ -128,6 +130,8 @@ void VerticesSelectionStyle::OnMouseMove()
 
 void VerticesSelectionStyle::resetSelection() {
 
+    if(mesh == nullptr) return;
+
     this->assembly->RemovePart(sphereAssembly);
     this->sphereAssembly = vtkSmartPointer<vtkPropAssembly>::New();
 
@@ -136,25 +140,27 @@ void VerticesSelectionStyle::resetSelection() {
         v->removeFlag(FlagType::SELECTED);
     }
 
+    emit(updateView());
 }
 
 
-void VerticesSelectionStyle::defineSelection(std::vector<unsigned long> selected) {
-	for (std::vector<unsigned long>::iterator it = selected.begin(); it != selected.end(); it++) 
+void VerticesSelectionStyle::defineSelection(std::vector<std::shared_ptr<Vertex> > selected) {
+    if(mesh == nullptr) return;
+    for (auto v : selected)
         if(selectionMode)
-            mesh->getVertex(*it)->addFlag(FlagType::SELECTED);
+            v->addFlag(FlagType::SELECTED);
 }
 
-void VerticesSelectionStyle::modifySelectedPoints() {
-    this->selectedPoints.clear();
+void VerticesSelectionStyle::draw() {
 
+    if(mesh == nullptr) return;
+    ren->RemoveActor(this->assembly);
     assembly->RemovePart(sphereAssembly);
     this->sphereAssembly = vtkSmartPointer<vtkPropAssembly>::New();
 
     for (unsigned long i = 0; i < static_cast<unsigned long>(mesh->getVerticesNumber()); i++)
         if (mesh->getVertex(i)->searchFlag(FlagType::SELECTED) >= 0)
         {
-            this->selectedPoints.push_back(i);
             vtkSmartPointer<vtkSphereSource> sphereSource = vtkSmartPointer<vtkSphereSource>::New();
             auto p = mesh->getVertex(i);
             p->addFlag(FlagType::SELECTED);
@@ -170,12 +176,17 @@ void VerticesSelectionStyle::modifySelectedPoints() {
 
     assembly->AddPart(sphereAssembly);
 
-    emit(updateView());
+    this->assembly->Modified();
+    ren->AddActor(this->assembly);
+    ren->Render();
+    ren->GetRenderWindow()->Render();
+    this->qvtkwidget->update();
 
 }
 
 void VerticesSelectionStyle::finalizeAnnotation(std::string id, string tag, unsigned char color[])
 {
+    if(mesh == nullptr) return;
     vector<std::shared_ptr<SemantisedTriangleMesh::Vertex> > selectedPoints;
     for(uint i = 0; i < mesh->getVerticesNumber(); i++){
         auto v = mesh->getVertex(i);
@@ -194,19 +205,19 @@ void VerticesSelectionStyle::finalizeAnnotation(std::string id, string tag, unsi
         this->mesh->update();
         this->mesh->draw(assembly);
         this->resetSelection();
-        this->modifySelectedPoints();
+        this->draw();
         this->annotation = std::make_shared<DrawablePointAnnotation>();
     }
 }
 
 vtkSmartPointer<vtkPolyData> VerticesSelectionStyle::getPoints() const
 {
-    return Points;
+    return points;
 }
 
 void VerticesSelectionStyle::setPoints(const vtkSmartPointer<vtkPolyData>& value)
 {
-    Points = value;
+    points = value;
 }
 
 
@@ -275,5 +286,15 @@ void VerticesSelectionStyle::setMesh(const std::shared_ptr<DrawableTriangleMesh>
     idFilterMesh->Update();
     vtkSmartPointer<vtkPolyData> inputMesh = static_cast<vtkPolyData*>(idFilterMesh->GetOutput());
     this->sphereRadius = this->mesh->getAABBDiagonalLength() / RADIUS_RATIO;
+}
+
+vtkSmartPointer<vtkRenderer> VerticesSelectionStyle::getRenderer() const
+{
+    return ren;
+}
+
+void VerticesSelectionStyle::setRenderer(vtkSmartPointer<vtkRenderer> newRen)
+{
+    ren = newRen;
 }
 

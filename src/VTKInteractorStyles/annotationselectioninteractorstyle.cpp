@@ -22,6 +22,7 @@ void AnnotationSelectionInteractorStyle::OnMouseMove()
 
 void AnnotationSelectionInteractorStyle::OnLeftButtonDown()
 {
+    if(mesh == nullptr) return;
     if(this->Interactor->GetControlKey()){
 
         this->cellPicker->AddPickList(mesh->getSurfaceActor());
@@ -41,15 +42,13 @@ void AnnotationSelectionInteractorStyle::OnLeftButtonDown()
             double wc[3];
             double bestDistance = DBL_MAX;
             this->cellPicker->GetPickPosition(wc);
-            auto p = new Point(wc[0], wc[1], wc[2]);
+            Point p(wc[0], wc[1], wc[2]);
             auto v_ = t->getV1();
             std::shared_ptr<Vertex> v;
             auto annotations = mesh->getAnnotations();
-            for(uint i = 0; i < mesh->getVerticesNumber(); i++)
-                mesh->getVertex(i)->setInfo(nullptr);
 
             for(unsigned int i = 0; i < 3; i++){
-                double actualDistance = ((*v_) - (*p)).norm();
+                double actualDistance = ((*v_) - p).norm();
                 if(actualDistance < bestDistance){
                     bestDistance = actualDistance;
                     v = v_;
@@ -62,29 +61,30 @@ void AnnotationSelectionInteractorStyle::OnLeftButtonDown()
                 if(annotations[i]->isPointInAnnotation(v))
                     selected.push_back(dynamic_pointer_cast<DrawableAnnotation>(annotations[i]));
 
-            if(selected.size() != 0){
-                std::shared_ptr<DrawableAnnotation> selectedAnnotation;
-                if(selected.size() > 1){
+            if(selected.size() != 0)
+            {
+                std::shared_ptr<DrawableAnnotation> selectedAnnotation = nullptr;
+                if(selected.size() > 1)
+                {
                     AnnotationSelectionDialog* dialog = new AnnotationSelectionDialog();
                     dialog->setAnnotationsList(selected);
                     dialog->exec();
                     selectedAnnotation = dialog->getSelectedAnnotation();
-                }else
+                } else
                     selectedAnnotation = selected[0];
-                auto ait = std::find(annotations.begin(), annotations.end(), selectedAnnotation);
 
-                if(ait != annotations.end()){
-                    auto annotation = dynamic_pointer_cast<DrawableAnnotation>(*ait);
-                    annotation->setSelected(!annotation->getSelected());
-                    auto selectedMeshAnnotation = mesh->getAnnotations()[ait - annotations.begin()];
-                    auto sait = std::find(selectedAnnotations.begin(), selectedAnnotations.end(), selectedMeshAnnotation);
+                if(selectedAnnotation != nullptr)
+                {
+                    selectedAnnotation->setSelected(!selectedAnnotation->getSelected());
+                    selectedAnnotation->update();
+                    auto sait = std::find(selectedAnnotations.begin(), selectedAnnotations.end(), selectedAnnotation);
                     if(sait == selectedAnnotations.end())
-                        selectedAnnotations.push_back(selectedMeshAnnotation);
+                        selectedAnnotations.push_back(selectedAnnotation);
                     else
                         selectedAnnotations.erase(sait);
                 }
 
-                modifySelectedAnnotations();
+                emit(updateView());
             }
 
         }
@@ -99,15 +99,11 @@ void AnnotationSelectionInteractorStyle::OnLeftButtonUp()
 
 void AnnotationSelectionInteractorStyle::resetSelection()
 {
+    if(mesh == nullptr) return;
     for(unsigned int i = 0; i < mesh->getAnnotations().size(); i++)
         dynamic_pointer_cast<DrawableAnnotation>(mesh->getAnnotations()[i])->setSelected(false);
-}
-
-void AnnotationSelectionInteractorStyle::modifySelectedAnnotations()
-{
-    mesh->draw(assembly);
-    assembly->Modified();
-    qvtkWidget->update();
+    selectedAnnotations.clear();
+    emit(updateView());
 }
 
 vtkSmartPointer<vtkPropAssembly> AnnotationSelectionInteractorStyle::getAssembly() const

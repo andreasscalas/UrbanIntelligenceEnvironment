@@ -28,7 +28,6 @@ public:
     void OnLeftButtonDown() override;
     void OnLeftButtonUp() override;
     void resetSelection();
-    void modifySelectedAnnotations();
 
     vtkSmartPointer<vtkPropAssembly> getAssembly() const;
     void setAssembly(const vtkSmartPointer<vtkPropAssembly> &value);

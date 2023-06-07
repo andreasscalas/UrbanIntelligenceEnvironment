@@ -6,9 +6,12 @@
 #include <annotation.hpp>
 #include <annotation.hpp>
 #include <annotationdialog.hpp>
+#include <annotationrelationshipdialog.hpp>
 #include <annotationselectioninteractorstyle.hpp>
 #include <drawabletrianglemesh.hpp>
 #include <lineselectionstyle.hpp>
+#include <measurestyle.hpp>
+#include <relationship.hpp>
 #include <triangleselectionstyle.hpp>
 #include <verticesselectionstyle.hpp>
 #include <vtkPropAssembly.h>
@@ -46,19 +49,39 @@ private slots:
 
     void on_actionVerticesSelection_triggered(bool checked);
 
-    void on_actionTrianglesRectangleSelection_toggled(bool checked);
+    void on_actionTrianglesRectangleSelection_triggered(bool checked);
 
     void on_actionTrianglesLassoSelection_triggered(bool checked);
-
-    void on_actionSelectionAnnotation_triggered();
-
-    void slotUpdateView();
 
     void slotFinalization(std::string, uchar*);
 
     void on_actionLinesSelection_triggered(bool checked);
 
-    void on_actionselectAnnotations_triggered(bool checked);
+    void on_actionSelectAnnotations_triggered(bool checked);
+
+    void on_actionEditAnnotations_triggered(bool checked);
+
+    void on_actionRulerMeasure_triggered(bool checked);
+
+    void on_actionMeasureTape_triggered(bool checked);
+
+    void on_actionCaliperMeasure_triggered(bool checked);
+
+    void on_actionAnnotateSelection_triggered();
+
+    void on_actionAddMeasure_triggered();
+
+    void on_actionAnnotationRelation_triggered();
+
+    void slotUpdate();
+
+    void slotUpdateView();
+
+    void slotAddAnnotationsRelationship(std::string, double, double, double, unsigned int, unsigned int, bool);
+
+    void on_actionSave_relationships_triggered();
+
+    void on_actionOpen_relationships_triggered();
 
 private:
     Ui::MainWindow *ui;
@@ -69,10 +92,13 @@ private:
     vtkSmartPointer<LineSelectionStyle> linesSelectionStyle;
     vtkSmartPointer<TriangleSelectionStyle> trianglesSelectionStyle;
     vtkSmartPointer<AnnotationSelectionInteractorStyle> annotationsSelectionStyle;
+    vtkSmartPointer<MeasureStyle> measureStyle;
 
     std::shared_ptr<AnnotationDialog> annotationDialog;
+    std::shared_ptr<AnnotationsRelationshipDialog> relationshipDialog;
     std::shared_ptr<DrawableTriangleMesh> currentMesh;
     std::shared_ptr<SemantisedTriangleMesh::Annotation> annotationBeingModified;
+    std::vector<std::shared_ptr<SemantisedTriangleMesh::Relationship> > annotationsRelationships;
     std::string currentPath;
     uint lod;
     unsigned int reachedId;

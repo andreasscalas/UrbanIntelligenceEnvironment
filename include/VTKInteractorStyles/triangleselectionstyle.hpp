@@ -45,8 +45,9 @@ public:
     void OnLeftButtonUp() override;
     void SetTriangles(vtkSmartPointer<vtkPolyData> triangles);
     void resetSelection();
-    void defineSelection(std::vector<unsigned long> selected);
+    void defineSelection(std::vector<std::string> selected);
     void finalizeAnnotation(std::string id, std::string tag, unsigned char color[]);
+    void draw();
 
     std::shared_ptr<SemantisedTriangleMesh::Annotation> getAnnotation() const;
     bool getShowSelectedTriangles() const;
@@ -83,11 +84,10 @@ signals:
 private:
         vtkSmartPointer<vtkPropAssembly> assembly;          //Assembly of actors
         vtkSmartPointer<vtkPropAssembly> sphereAssembly;    //Assembly of spheres
-        vtkSmartPointer<vtkPolyData> Triangles;
-        vtkSmartPointer<vtkActor> SplineActor;
+        vtkSmartPointer<vtkPolyData> triangles;
+        vtkSmartPointer<vtkActor> splineActor;
         vtkSmartPointer<vtkCellPicker> cellPicker;      //The cell picker
         vtkSmartPointer<vtkPoints> splinePoints;
-        vtkSmartPointer<vtkSpline> spline;
         vtkSmartPointer<vtkRenderer> ren;
         QVTKOpenGLNativeWidget* qvtkWidget;
         double sphereRadius;

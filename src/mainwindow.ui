@@ -41,25 +41,69 @@
         <item>
          <layout class="QVBoxLayout" name="meshesToolbar">
           <item>
-           <widget class="QFrame" name="frame">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="frameShape">
-             <enum>QFrame::StyledPanel</enum>
-            </property>
-            <property name="frameShadow">
-             <enum>QFrame::Raised</enum>
-            </property>
-           </widget>
+           <layout class="QVBoxLayout" name="verticalLayout_2">
+            <item>
+             <widget class="QLabel" name="label">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>250</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>30</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>Annotations list</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="MeasuresListWidget" name="measuresListWidget" native="true">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>250</width>
+                <height>0</height>
+               </size>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
          </layout>
         </item>
         <item>
          <widget class="QPushButton" name="clearCanvasButton">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>250</width>
+            <height>0</height>
+           </size>
+          </property>
           <property name="text">
            <string>Clear canvas</string>
           </property>
@@ -87,6 +131,8 @@
     <addaction name="actionOpenMesh"/>
     <addaction name="actionOpenAnnotations"/>
     <addaction name="actionSaveAnnotations"/>
+    <addaction name="actionOpen_relationships"/>
+    <addaction name="actionSave_relationships"/>
    </widget>
    <addaction name="menuFile"/>
   </widget>
@@ -109,10 +155,15 @@
    <addaction name="actionTrianglesRectangleSelection"/>
    <addaction name="actionTrianglesLassoSelection"/>
    <addaction name="separator"/>
-   <addaction name="actionSelectionAnnotation"/>
-   <addaction name="actionselectAnnotations"/>
+   <addaction name="actionAnnotateSelection"/>
+   <addaction name="actionSelectAnnotations"/>
    <addaction name="actionEditAnnotations"/>
    <addaction name="actionAnnotationRelation"/>
+   <addaction name="separator"/>
+   <addaction name="actionRulerMeasure"/>
+   <addaction name="actionMeasureTape"/>
+   <addaction name="actionCaliperMeasure"/>
+   <addaction name="actionAddMeasure"/>
   </widget>
   <action name="actionOpenMesh">
    <property name="text">
@@ -177,13 +228,13 @@
     <string>Select triangles with lasso selector</string>
    </property>
   </action>
-  <action name="actionSelectionAnnotation">
+  <action name="actionAnnotateSelection">
    <property name="icon">
     <iconset resource="../icons/icons.qrc">
      <normaloff>:/Icons/tag-icon.png</normaloff>:/Icons/tag-icon.png</iconset>
    </property>
    <property name="text">
-    <string>SelectionAnnotation</string>
+    <string>AnnotateSelection</string>
    </property>
    <property name="toolTip">
     <string>Annotate selected primitives</string>
@@ -246,7 +297,7 @@
     <string>Select edges for annotation</string>
    </property>
   </action>
-  <action name="actionselectAnnotations">
+  <action name="actionSelectAnnotations">
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -273,12 +324,85 @@
     <string>Edit selected annotation (only one per time)</string>
    </property>
   </action>
+  <action name="actionRulerMeasure">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../icons/icons.qrc">
+     <normaloff>:/Icons/ruler.png</normaloff>:/Icons/ruler.png</iconset>
+   </property>
+   <property name="text">
+    <string>RulerMeasure</string>
+   </property>
+   <property name="toolTip">
+    <string>Define Euclidean measure (as using a ruler)</string>
+   </property>
+  </action>
+  <action name="actionMeasureTape">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../icons/icons.qrc">
+     <normaloff>:/Icons/tape.png</normaloff>:/Icons/tape.png</iconset>
+   </property>
+   <property name="text">
+    <string>MeasureTape</string>
+   </property>
+   <property name="toolTip">
+    <string>Define geodesic measure (as using a measure tape)</string>
+   </property>
+  </action>
+  <action name="actionCaliperMeasure">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../icons/icons.qrc">
+     <normaloff>:/Icons/caliper.png</normaloff>:/Icons/caliper.png</iconset>
+   </property>
+   <property name="text">
+    <string>CaliperMeasure</string>
+   </property>
+   <property name="toolTip">
+    <string>Define Euclidean measure (as using a caliper)</string>
+   </property>
+  </action>
+  <action name="actionAddMeasure">
+   <property name="icon">
+    <iconset resource="../icons/icons.qrc">
+     <normaloff>:/Icons/add_measure.png</normaloff>:/Icons/add_measure.png</iconset>
+   </property>
+   <property name="text">
+    <string>Add measure</string>
+   </property>
+   <property name="toolTip">
+    <string>Finalise measure</string>
+   </property>
+  </action>
+  <action name="actionSave_relationships">
+   <property name="text">
+    <string>Save relationships</string>
+   </property>
+  </action>
+  <action name="actionOpen_relationships">
+   <property name="text">
+    <string>Open relationships</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>
    <class>QVTKOpenGLNativeWidget</class>
    <extends>QWidget</extends>
    <header location="global">QVTKOpenGLNativeWidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>MeasuresListWidget</class>
+   <extends>QWidget</extends>
+   <header location="global">measureslistwidget.hpp</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

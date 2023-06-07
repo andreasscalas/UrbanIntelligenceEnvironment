@@ -9,8 +9,9 @@
 #include <vtkCellPicker.h>
 #include <vtkPropAssembly.h>
 
-class MeasureStyle : public vtkInteractorStyleTrackballCamera
+class MeasureStyle : public QObject, public vtkInteractorStyleTrackballCamera
 {
+    Q_OBJECT
 public:
     enum class MeasureType {RULER, TAPE, CALIBER, BOUNDING, HEIGHT};
     const double epsilon = 1e-7;
@@ -55,6 +56,10 @@ public:
     bool getDrawAttributes() const;
     void setDrawAttributes(bool value);
 
+    vtkSmartPointer<vtkPropAssembly> getMeasureAssembly() const;
+    void setMeasureAssembly(vtkSmartPointer<vtkPropAssembly> newMeasureAssembly);
+
+signals:
     void updateView();
 protected:
     std::shared_ptr<DrawableTriangleMesh> mesh;

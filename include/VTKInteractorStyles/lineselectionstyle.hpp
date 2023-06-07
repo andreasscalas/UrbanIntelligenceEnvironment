@@ -13,8 +13,9 @@
 #include <vtkCellPicker.h>
 #include <QVTKOpenGLNativeWidget.h>
 
-class LineSelectionStyle : public vtkInteractorStyleRubberBandPick
+class LineSelectionStyle : public QObject, public vtkInteractorStyleRubberBandPick
 {
+    Q_OBJECT
 public:
     constexpr static double TOLERANCE_RATIO = 2e-1;
     constexpr static double RADIUS_RATIO = 1000;
@@ -28,7 +29,9 @@ public:
     void OnLeftButtonUp() override;
     void modifySelectedLines();
     void resetSelection();
+    void defineSelection(std::vector<std::vector<std::shared_ptr<SemantisedTriangleMesh::Vertex> > > polylines);
     void finalizeAnnotation(std::string id, std::string tag, unsigned char color[]);
+    void draw();
 
     vtkSmartPointer<vtkActor> getSplineActor() const;
     void setSplineActor(const vtkSmartPointer<vtkActor> &value);
@@ -70,6 +73,8 @@ public:
     const std::shared_ptr<DrawableTriangleMesh> &getMesh() const;
     void setMesh(const std::shared_ptr<DrawableTriangleMesh> &newMesh);
 
+signals:
+    void updateView();
 protected:
 
     std::map<unsigned long, bool>* pointsSelectionStatus;

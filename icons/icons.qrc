@@ -36,6 +36,10 @@
         <file>camera.png</file>
         <file>unconstraint.png</file>
         <file>edit_icon.png</file>
+        <file>ruler.png</file>
+        <file>tape.png</file>
+        <file>caliper.png</file>
+        <file>add_measure.png</file>
     </qresource>
     <qresource prefix="/">
         <file>redo.png</file>

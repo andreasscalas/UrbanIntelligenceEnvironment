@@ -40,16 +40,15 @@ public:
 
 	void resetSelection();
 
-	void defineSelection(std::vector<unsigned long> selected);
+    void defineSelection(std::vector<std::shared_ptr<SemantisedTriangleMesh::Vertex> > selected);
 
-    void modifySelectedPoints();
+    void draw();
 
     void finalizeAnnotation(std::string id, std::string tag, unsigned char color[]);
 
     vtkSmartPointer<vtkPolyData> getPoints() const;
     void setPoints(const vtkSmartPointer<vtkPolyData>& value);
-	std::map<unsigned long, bool>* getSelectedPoints() const;
-	void setSelectedPoints(std::map<unsigned long, bool>* value);
+    std::map<unsigned long, bool>* getSelectedPoints() const;
 	vtkSmartPointer<vtkPointPicker> getPointPicker() const;
 	void setPointPicker(const vtkSmartPointer<vtkPointPicker>& value);
 	bool getSelectionMode() const;
@@ -67,6 +66,9 @@ public:
     void setMesh(const std::shared_ptr<DrawableTriangleMesh> &newMesh);
 
 
+    vtkSmartPointer<vtkRenderer> getRenderer() const;
+    void setRenderer(vtkSmartPointer<vtkRenderer> newRen);
+
 signals:
     void updateView();
 
@@ -75,9 +77,9 @@ private:
 
     vtkSmartPointer<vtkPropAssembly> assembly;          //Assembly of actors
     vtkSmartPointer<vtkPropAssembly> sphereAssembly;    //Assembly of spheres
-    vtkSmartPointer<vtkPolyData> Points;
-    std::vector<unsigned long> selectedPoints;
+    vtkSmartPointer<vtkPolyData> points;
     vtkSmartPointer<vtkPointPicker> pointPicker;        //The point picker
+    vtkSmartPointer<vtkRenderer> ren;
     QVTKOpenGLNativeWidget* qvtkwidget;
     bool selectionMode;
     bool visiblePointsOnly;
