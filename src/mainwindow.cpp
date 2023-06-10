@@ -298,9 +298,7 @@ void MainWindow::on_actionVerticesSelection_triggered(bool checked)
         vtkSmartPointer<vtkPolyData> inputPoints = static_cast<vtkPolyData*>(idFilter->GetOutput());
         verticesSelectionStyle->setVisiblePointsOnly(selectOnlyVisible);
         verticesSelectionStyle->setSelectionMode(!eraseSelected);
-        verticesSelectionStyle->setMesh(currentMesh);
         verticesSelectionStyle->setAssembly(canvas);
-        verticesSelectionStyle->setPoints(inputPoints);
         verticesSelectionStyle->setQvtkwidget(ui->meshViewer);
         verticesSelectionStyle->setRenderer(renderer);
         vtkSmartPointer<vtkAreaPicker> picker = vtkSmartPointer<vtkAreaPicker>::New();
@@ -337,12 +335,10 @@ void MainWindow::on_actionLinesSelection_triggered(bool checked)
         vtkSmartPointer<vtkPolyData> inputEdges = static_cast<vtkPolyData*>(idFilter->GetOutput());
         linesSelectionStyle->setVisiblePointsOnly(selectOnlyVisible);
         linesSelectionStyle->setSelectionMode(!eraseSelected);
-        linesSelectionStyle->setMesh(currentMesh);
         linesSelectionStyle->setAssembly(canvas);
-        linesSelectionStyle->setPoints(inputEdges);
         linesSelectionStyle->setQvtkwidget(ui->meshViewer);
         linesSelectionStyle->setRen(renderer);
-        vtkSmartPointer<vtkCellPicker> picker = vtkSmartPointer<vtkCellPicker>::New();
+        vtkSmartPointer<vtkAreaPicker> picker = vtkSmartPointer<vtkAreaPicker>::New();
         ui->meshViewer->interactor()->SetPicker(picker);
         ui->meshViewer->interactor()->SetInteractorStyle(linesSelectionStyle);
         this->ui->actionVerticesSelection->setChecked(false);
@@ -379,9 +375,7 @@ void MainWindow::on_actionTrianglesRectangleSelection_triggered(bool checked)
         trianglesSelectionStyle->setVisibleTrianglesOnly(selectOnlyVisible);
         trianglesSelectionStyle->setSelectionMode(!eraseSelected);
         trianglesSelectionStyle->setSelectionType(TriangleSelectionStyle::SelectionType::RECTANGLE_AREA);
-        trianglesSelectionStyle->setMesh(currentMesh);
         trianglesSelectionStyle->setAssembly(canvas);
-        trianglesSelectionStyle->SetTriangles(inputTriangles);
         trianglesSelectionStyle->setQvtkWidget(ui->meshViewer);
         trianglesSelectionStyle->setRen(renderer);
         vtkSmartPointer<vtkAreaPicker> picker = vtkSmartPointer<vtkAreaPicker>::New();
@@ -408,7 +402,6 @@ void MainWindow::on_actionTrianglesLassoSelection_triggered(bool checked)
     selectTrianglesWithLasso = checked;
     if(checked)
     {
-        bool selectTriangles = !selectVertices && !selectEdges && !selectAnnotations;
         this->selectVertices = false;
         this->selectEdges = false;
         this->selectAnnotations = false;
@@ -423,8 +416,6 @@ void MainWindow::on_actionTrianglesLassoSelection_triggered(bool checked)
         trianglesSelectionStyle->setVisibleTrianglesOnly(selectOnlyVisible);
         trianglesSelectionStyle->setSelectionMode(!eraseSelected);
         trianglesSelectionStyle->setSelectionType(TriangleSelectionStyle::SelectionType::LASSO_AREA);
-        trianglesSelectionStyle->SetTriangles(inputTriangles);
-        trianglesSelectionStyle->setMesh(currentMesh);
         trianglesSelectionStyle->setAssembly(canvas);
         trianglesSelectionStyle->setQvtkWidget(ui->meshViewer);
         trianglesSelectionStyle->setRen(renderer);
@@ -454,11 +445,9 @@ void MainWindow::on_actionSelectAnnotations_triggered(bool checked)
     {
         this->selectVertices = false;
         this->selectEdges = false;
-        annotationsSelectionStyle->setMesh(currentMesh);
         annotationsSelectionStyle->setAssembly(canvas);
         annotationsSelectionStyle->setQvtkWidget(ui->meshViewer);
         annotationsSelectionStyle->setRen(renderer);
-        annotationsSelectionStyle->resetSelection();
         ui->meshViewer->interactor()->SetInteractorStyle(annotationsSelectionStyle);
         this->ui->actionVerticesSelection->setChecked(false);
         this->ui->actionLinesSelection->setChecked(false);
@@ -492,7 +481,7 @@ void MainWindow::slotUpdateView()
     renderer->AddActor(canvas);
     canvas->Modified();
     renderer->SetBackground(255,255,255);
-    ui->measuresListWidget->update();
+    //ui->measuresListWidget->update();
     this->ui->meshViewer->renderWindow()->AddRenderer(renderer);
     this->ui->meshViewer->renderWindow()->Render();
     this->ui->meshViewer->update();
@@ -538,9 +527,68 @@ void MainWindow::slotFinalization(std::string tag, uchar * color)
     else
         trianglesSelectionStyle->finalizeAnnotation(id, tag, color);
 
+    auto annotation = currentMesh->getAnnotation(std::stoi(id));
+    auto involved = annotation->getInvolvedVertices();
+    std::vector<std::shared_ptr<SemantisedTriangleMesh::Point> > points;
+    for_each(involved.begin(), involved.end(), [&points](std::shared_ptr<SemantisedTriangleMesh::Vertex> v )
+    {
+        points.push_back(v);
+    });
+    auto height = std::make_shared<DrawableBoundingMeasure>();
+    auto width = std::make_shared<DrawableBoundingMeasure>();
+    auto depth = std::make_shared<DrawableBoundingMeasure>();
+    auto o = std::make_shared<SemantisedTriangleMesh::Point>(0,0,0);
+    for(unsigned int k = 0; k < involved.size(); k++)
+        (*o) += *(involved[k]);
+    (*o) /= involved.size();
 
+    auto up = std::make_shared<SemantisedTriangleMesh::Point>(0, 0, 1);
+    auto side = std::make_shared<SemantisedTriangleMesh::Point>(1, 0, 0);
+    auto inDepth = std::make_shared<SemantisedTriangleMesh::Point>(0, 1, 0);
+    height->setId(0);
+    height->setKey("height");
+    height->setOrigin(o);
+    height->setDirection(up);
+    height->setType(SemantisedTriangleMesh::GeometricAttributeType::BOUNDING_MEASURE);
+    width->setId(1);
+    width->setKey("width");
+    width->setOrigin(o);
+    width->setDirection(side);
+    width->setType(SemantisedTriangleMesh::GeometricAttributeType::BOUNDING_MEASURE);
+    depth->setId(2);
+    depth->setKey("depth");
+    depth->setOrigin(o);
+    depth->setDirection(inDepth);
+    depth->setType(SemantisedTriangleMesh::GeometricAttributeType::BOUNDING_MEASURE);
+
+    auto extrema = SemantisedTriangleMesh::Point::findExtremePoints(points, *up);
+    height->addMeasurePointID(std::stoi(std::static_pointer_cast<SemantisedTriangleMesh::Vertex>(extrema.first)->getId()));
+    height->addMeasurePointID(std::stoi(std::static_pointer_cast<SemantisedTriangleMesh::Vertex>(extrema.second)->getId()));
+    height->setMesh(currentMesh);
+    height->update();
+    height->setDrawValue(false);
+    height->setDrawPlanes(false);
+    extrema = SemantisedTriangleMesh::Point::findExtremePoints(points, *side);
+    width->addMeasurePointID(std::stoi(std::static_pointer_cast<SemantisedTriangleMesh::Vertex>(extrema.first)->getId()));
+    width->addMeasurePointID(std::stoi(std::static_pointer_cast<SemantisedTriangleMesh::Vertex>(extrema.second)->getId()));
+    width->setMesh(currentMesh);
+    width->update();
+    width->setDrawValue(false);
+    width->setDrawPlanes(false);
+    extrema = SemantisedTriangleMesh::Point::findExtremePoints(points, *inDepth);
+    depth->addMeasurePointID(std::stoi(std::static_pointer_cast<SemantisedTriangleMesh::Vertex>(extrema.first)->getId()));
+    depth->addMeasurePointID(std::stoi(std::static_pointer_cast<SemantisedTriangleMesh::Vertex>(extrema.second)->getId()));
+    depth->setMesh(currentMesh);
+    depth->update();
+    depth->setDrawValue(false);
+    depth->setDrawPlanes(false);
+    annotation->addAttribute(height);
+    annotation->addAttribute(width);
+    annotation->addAttribute(depth);
+    std::dynamic_pointer_cast<DrawableAnnotation>(annotation)->setDrawAttributes(true);
     this->ui->measuresListWidget->setMesh(currentMesh);
     this->ui->measuresListWidget->update();
+    slotUpdateView();
 }
 
 void MainWindow::on_actionEditAnnotations_triggered(bool checked)
@@ -642,7 +690,6 @@ void MainWindow::on_actionMeasureTape_triggered(bool checked)
 
 }
 
-
 void MainWindow::on_actionCaliperMeasure_triggered(bool checked)
 {
     auto selectedAnnotations = annotationsSelectionStyle->getSelectedAnnotations();
@@ -659,12 +706,12 @@ void MainWindow::on_actionCaliperMeasure_triggered(bool checked)
         ui->actionSelectAnnotations->setChecked(false);
         ui->actionRulerMeasure->setChecked(false);
         ui->actionMeasureTape->setChecked(false);
+        ui->actionHeightMeasure->setChecked(false);
         ui->meshViewer->interactor()->SetInteractorStyle(measureStyle);
         measureStyle->setMeasureType(MeasureStyle::MeasureType::BOUNDING);
     }
 
 }
-
 
 void MainWindow::on_actionAnnotateSelection_triggered()
 {
@@ -679,7 +726,7 @@ void MainWindow::on_actionAddMeasure_triggered()
         bool ok;
         QString text = QInputDialog::getText(this, tr("QInputDialog::getText()"),
                                                  tr("Attribute name:"), QLineEdit::Normal,
-                                                 QDir::home().dirName(), &ok);
+                                                 "Attribute name", &ok);
         if (ok && !text.isEmpty()){
             auto attribute = measureStyle->finalizeAttribute(selected[0]->getAttributes().size(), text.toStdString());
             selected[0]->addAttribute(attribute);
@@ -749,4 +796,69 @@ void MainWindow::on_actionOpen_relationships_triggered()
           std::cout << "Something went wrong during relationships file load." << std::endl << std::flush;
     }
 }
+
+int is_executable_file(char const * file_path)
+{
+    struct stat sb;
+    return
+        (stat(file_path, &sb) == 0) &&
+        S_ISREG(sb.st_mode) &&
+        (access(file_path, X_OK) == 0);
+}
+
+std::string getDirectory (const std::string& path)
+{
+    size_t found = path.find_last_of("/\\");
+    return(path.substr(0, found));
+}
+
+void MainWindow::on_actionComputeAccessibility_triggered()
+{
+    QString filename = QFileDialog::getOpenFileName(nullptr,
+         "Select the script for accessibility computation",
+         QString::fromStdString(currentPath),
+         "all(*);;");
+
+    std::string message = "";
+    if (!filename.isEmpty() && is_executable_file(filename.toStdString().c_str())){
+
+        if(currentMesh != nullptr)
+        {
+            auto dir = getDirectory(filename.toStdString());
+            std::string annotationsFilename = dir;
+            annotationsFilename.append("/annotations.ant");
+            std::string relationsFilename = dir;
+            relationsFilename.append("/relations.rel");
+            SemantisedTriangleMesh::AnnotationFileManager manager;
+            manager.setMesh(currentMesh);
+            uint annRetValue = manager.writeAnnotations(annotationsFilename);
+            uint relRetValue = manager.writeRelationships(relationsFilename);
+            if(annRetValue && relRetValue)
+            {
+                auto status = std::system(filename.toStdString().c_str());
+                if (status >= 0)
+                {
+                    if (!WIFEXITED(status))
+                        message = "Program exited abnormally.";
+                } else
+                    message = strerror(errno);
+            } else
+                message = "Error writing annotations and/or relationships";
+
+        } else
+            message = "You need to load a mesh first";
+
+    } else
+        message = "The selected file is not an executable.";
+
+    if(message.compare("") != 0)
+    {
+        auto dialog = new QMessageBox(this);
+        dialog->setWindowTitle("Error");
+        dialog->setText(QString::fromStdString(message));
+        dialog->show();
+    }
+
+}
+
 

@@ -15,6 +15,7 @@
 #include <vtkPolyDataMapper.h>
 #include <vtkRenderLargeImage.h>
 #include <vtkLine.h>
+#include <vtkWorldPointPicker.h>
 
 #include <chrono>
 using namespace std::chrono;
@@ -109,28 +110,14 @@ void TriangleSelectionStyle::OnLeftButtonDown(){
                     y = this->Interactor->GetEventPosition()[1];
                     this->FindPokedRenderer(x, y);
                     //Some tolerance is set for the picking
-                    this->cellPicker->Pick(x, y, 0, ren);
-                    vtkIdType cellID = this->cellPicker->GetCellId();
-
-                    //If some point has been picked...
-                    if(cellID > 0 && cellID < this->mesh->getTrianglesNumber()){
-                        auto t = mesh->getTriangle(static_cast<unsigned long>(cellID));
-                        double wc[3];
-                        double bestDistance = DBL_MAX;
-
-                        this->cellPicker->GetPickPosition(wc);
-                        auto p = std::make_shared<Vertex>(wc[0], wc[1], wc[2]);
-                        auto v_ = t->getV1();
-                        std::shared_ptr<Vertex> v;
-
-                        for(int i = 0; i < 3; i++){
-                            double actualDistance = ((*v_)-(*p)).norm();
-                            if(actualDistance < bestDistance){
-                                bestDistance = actualDistance;
-                                v = v_;
-                            }
-                            v_ = t->getNextVertex(v_);
-                        }
+                    vtkSmartPointer<vtkWorldPointPicker> picker = vtkSmartPointer<vtkWorldPointPicker>::New();
+                    double pickPos[3];
+                    int picked = picker->Pick(x, y, 0, this->GetCurrentRenderer());
+                    picker->GetPickPosition(pickPos);
+                    SemantisedTriangleMesh::Point pickedPos(pickPos[0], pickPos[1], pickPos[2]);
+                    if(picked >= 0)
+                    {
+                        auto v = mesh->getClosestPoint(pickedPos);
 
                         vtkIdType pointID = static_cast<vtkIdType>(std::stoi(v->getId()));
                         auto actualVertex = mesh->getVertex(static_cast<unsigned long>(pointID));
@@ -147,7 +134,7 @@ void TriangleSelectionStyle::OnLeftButtonDown(){
                             firstVertex = actualVertex;
                             polygonContour.push_back(firstVertex);
                         }if(lastVertex != nullptr && lastVertex != actualVertex){
-                            auto newContourSegment = mesh->computeShortestPath(lastVertex, actualVertex, DistanceType::COMBINED_DISTANCE, true, false);
+                            auto newContourSegment = mesh->computeShortestPath(lastVertex, actualVertex, DistanceType::EUCLIDEAN_DISTANCE, true, false);
                             polygonContour.insert(polygonContour.end(), newContourSegment.begin(), newContourSegment.end());
                             draw();
                         }
@@ -296,6 +283,7 @@ void TriangleSelectionStyle::setAssembly(const vtkSmartPointer<vtkPropAssembly> 
 
 void TriangleSelectionStyle::finalizeAnnotation(std::string id, string tag, unsigned char color[]){
 
+    if(mesh == nullptr) return;
     vector<std::shared_ptr<SemantisedTriangleMesh::Triangle> > selectedTriangles;
     for(uint i = 0; i < mesh->getTrianglesNumber(); i++){
         auto t = mesh->getTriangle(i);
@@ -321,6 +309,7 @@ void TriangleSelectionStyle::finalizeAnnotation(std::string id, string tag, unsi
         this->annotation = std::make_shared<DrawableSurfaceAnnotation>();
         emit(updateView());
     }
+
 }
 
 void TriangleSelectionStyle::draw()

@@ -89,6 +89,6 @@ void AttributeWidget::deletionButtonClickedSlot()
     QPushButton* button = qobject_cast<QPushButton *>(sender());
     auto drawable = std::dynamic_pointer_cast<DrawableAttribute>(buttonMeasureMap[button]);
     annotation->removeAttribute(drawable);
-    emit updateSignal();
+    emit updateViewSignal();
     update();
 }

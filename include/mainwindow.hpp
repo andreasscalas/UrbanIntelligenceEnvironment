@@ -83,6 +83,9 @@ private slots:
 
     void on_actionOpen_relationships_triggered();
 
+    void on_actionComputeAccessibility_triggered();
+
+
 private:
     Ui::MainWindow *ui;
 

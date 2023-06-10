@@ -59,6 +59,8 @@ public:
     vtkSmartPointer<vtkPropAssembly> getMeasureAssembly() const;
     void setMeasureAssembly(vtkSmartPointer<vtkPropAssembly> newMeasureAssembly);
 
+    void draw();
+
 signals:
     void updateView();
 protected:

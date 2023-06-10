@@ -1,4 +1,5 @@
 #include "measurestyle.hpp"
+#include "vtkRenderWindow.h"
 #include "vtkSphereSource.h"
 
 #include <geometricattribute.hpp>
@@ -21,6 +22,7 @@
 #include <vtkPropPicker.h>
 #include <vtkRenderer.h>
 #include <vtkProperty.h>
+#include <vtkWorldPointPicker.h>
 
 using namespace std;
 using namespace SemantisedTriangleMesh;
@@ -84,7 +86,7 @@ void MeasureStyle::manageRulerMovement(std::shared_ptr<SemantisedTriangleMesh::V
 
 void MeasureStyle::manageTapeMovement(std::shared_ptr<SemantisedTriangleMesh::Vertex> start, std::shared_ptr<SemantisedTriangleMesh::Vertex> end)
 {
-    auto path = mesh->computeShortestPath(start, end, DistanceType::EUCLIDEAN_DISTANCE,  true, true);
+    auto path = mesh->computeShortestPath(start, end, DistanceType::EUCLIDEAN_DISTANCE, true, true);
     path.insert(path.begin(), start);
     measurePath.insert(measurePath.end(), path.begin(), path.end());
     Point measureVector;
@@ -342,9 +344,13 @@ void MeasureStyle::OnLeftButtonDown()
         y = this->Interactor->GetEventPosition()[1];
         this->FindPokedRenderer(x, y);
         //Some tolerance is set for the picking
-        this->cellPicker->Pick(x, y, 0, meshRenderer);
-        vtkSmartPointer<vtkPropPicker> picker = vtkSmartPointer<vtkPropPicker>::New();
-        picker->Pick(x, y, 0, meshRenderer);
+        vtkSmartPointer<vtkWorldPointPicker> picker = vtkSmartPointer<vtkWorldPointPicker>::New();
+        picker->AddPickList(mesh->getSurfaceActor());
+        picker->PickFromListOn();
+        double pickPos[3];
+        int picked = picker->Pick(x, y, 0, this->GetCurrentRenderer());
+        picker->GetPickPosition(pickPos);
+        SemantisedTriangleMesh::Point pickedPos(pickPos[0], pickPos[1], pickPos[2]);
 
         vtkIdType cellID = this->cellPicker->GetCellId();
 
@@ -361,21 +367,10 @@ void MeasureStyle::OnLeftButtonDown()
                 boundingBegin = std::make_shared<Point>(worldCoord[0], worldCoord[1], worldCoord[2]);
                 measureStarted = true;
             }
-        } else if(cellID > 0 && cellID < this->mesh->getTrianglesNumber()){
+        } else if(picked >= 0)
+        {
+            auto v = mesh->getClosestPoint(pickedPos);
 
-            double* pos = picker->GetPickPosition();
-            auto p = std::make_shared<Vertex>(pos[0], pos[1], pos[2]);
-            auto v_i = mesh->getTriangle(cellID)->getV1();
-            std::shared_ptr<Vertex> v = nullptr;
-            double best_dist = DBL_MAX;
-            for(unsigned int i = 0; i < 3; i++){
-                double dist = ((*p) - (*v_i)).norm();
-                if(dist < best_dist){
-                    v = v_i;
-                    best_dist = dist;
-                }
-                v_i = mesh->getTriangle(cellID)->getNextVertex(v_i);
-            }
             for(unsigned int i = 0; i < mesh->getAnnotations().size(); i++){
                 if(mesh->getAnnotations()[i]->isPointInAnnotation(v) && dynamic_pointer_cast<DrawableAnnotation>(mesh->getAnnotations()[i])->getSelected()){
                     if(measureType == MeasureType::HEIGHT)
@@ -421,13 +416,10 @@ void MeasureStyle::OnLeftButtonDown()
                     }
 
                     onCreationAttribute->update();
-                    if(drawAttributes)
-                        onCreationAttribute->draw(measureAssembly);
-                    measureAssembly->Modified();
+                    draw();
                 }
             }
 
-            emit(updateView());
 
         }
     }else
@@ -442,8 +434,7 @@ void MeasureStyle::OnLeftButtonUp()
         measureStarted = false;
 
     onCreationAttribute->update();
-    if(drawAttributes)
-        onCreationAttribute->draw(measureAssembly);
+    draw();
     vtkInteractorStyleTrackballCamera::OnLeftButtonUp();
 }
 
@@ -462,7 +453,7 @@ void MeasureStyle::OnRightButtonDown()
         } else
             measureStarted = false;
         onCreationAttribute->update();
-        emit(updateView());
+        draw();
     }
 
     vtkInteractorStyleTrackballCamera::OnRightButtonDown();
@@ -561,4 +552,15 @@ vtkSmartPointer<vtkPropAssembly> MeasureStyle::getMeasureAssembly() const
 void MeasureStyle::setMeasureAssembly(vtkSmartPointer<vtkPropAssembly> newMeasureAssembly)
 {
     measureAssembly = newMeasureAssembly;
+}
+
+void MeasureStyle::draw()
+{
+
+    if(drawAttributes)
+        onCreationAttribute->draw(measureAssembly);
+    measureAssembly->Modified();
+    meshRenderer->Render();
+    meshRenderer->GetRenderWindow()->Render();
+    this->qvtkwidget->update();
 }

@@ -164,6 +164,8 @@
    <addaction name="actionMeasureTape"/>
    <addaction name="actionCaliperMeasure"/>
    <addaction name="actionAddMeasure"/>
+   <addaction name="separator"/>
+   <addaction name="actionComputeAccessibility"/>
   </widget>
   <action name="actionOpenMesh">
    <property name="text">
@@ -389,6 +391,30 @@
   <action name="actionOpen_relationships">
    <property name="text">
     <string>Open relationships</string>
+   </property>
+  </action>
+  <action name="actionComputeAccessibility">
+   <property name="icon">
+    <iconset resource="../icons/icons.qrc">
+     <normaloff>:/Icons/accessibility.png</normaloff>:/Icons/accessibility.png</iconset>
+   </property>
+   <property name="text">
+    <string>ComputeAccessibility</string>
+   </property>
+   <property name="toolTip">
+    <string>Launch the compute accessibility procedure</string>
+   </property>
+  </action>
+  <action name="actionHeightMeasure">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../icons/icons.qrc">
+     <normaloff>:/Icons/height.png</normaloff>:/Icons/height.png</iconset>
+   </property>
+   <property name="text">
+    <string>HeightMeasure</string>
    </property>
   </action>
  </widget>

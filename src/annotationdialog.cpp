@@ -8,6 +8,12 @@ AnnotationDialog::AnnotationDialog(QWidget *parent) :
     ui->setupUi(this);
     this->setWindowTitle("AnnotationDialog");
     this->tag = this->ui->tagEdit->text().toStdString();
+    QColor tmpColor = Qt::red;
+    int r, g, b;
+    tmpColor.getRgb(&r, &g, &b);
+    color[0] = static_cast<uchar>(r);
+    color[1] = static_cast<uchar>(g);
+    color[2] = static_cast<uchar>(b);
     connect(this->ui->tagEdit, SIGNAL(textEdited(QString)), this, SLOT(slotTagEdit(QString)));
     connect(this->ui->colorButton, SIGNAL(clicked()), this, SLOT(slotColor()));
     connect(this->ui->ontologyDialogButton, SIGNAL(clicked()), this, SLOT(slotOntologyDialog()));
@@ -19,7 +25,7 @@ AnnotationDialog::~AnnotationDialog(){
 }
 
 void AnnotationDialog::slotColor(){
-    QColor tmpColor = QColorDialog::getColor();
+    QColor tmpColor = QColorDialog::getColor(Qt::red);
     int r, g, b;
     tmpColor.getRgb(&r, &g, &b);
     color[0] = static_cast<uchar>(r);

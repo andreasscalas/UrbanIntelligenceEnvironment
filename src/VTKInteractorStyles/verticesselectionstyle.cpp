@@ -157,6 +157,7 @@ void VerticesSelectionStyle::draw() {
     ren->RemoveActor(this->assembly);
     assembly->RemovePart(sphereAssembly);
     this->sphereAssembly = vtkSmartPointer<vtkPropAssembly>::New();
+    bool thereAreSelected = false;
 
     for (unsigned long i = 0; i < static_cast<unsigned long>(mesh->getVerticesNumber()); i++)
         if (mesh->getVertex(i)->searchFlag(FlagType::SELECTED) >= 0)
@@ -172,9 +173,11 @@ void VerticesSelectionStyle::draw() {
             actor->GetProperty()->SetColor(0,0,1);
             actor->SetMapper(mapper);
             sphereAssembly->AddPart(actor);
+            thereAreSelected = true;
         }
 
-    assembly->AddPart(sphereAssembly);
+    if(thereAreSelected)
+        assembly->AddPart(sphereAssembly);
 
     this->assembly->Modified();
     ren->AddActor(this->assembly);
@@ -202,11 +205,9 @@ void VerticesSelectionStyle::finalizeAnnotation(std::string id, string tag, unsi
         this->annotation->setPoints(selectedPoints);
         this->annotation->setMesh(mesh);
         this->mesh->addAnnotation(annotation);
-        this->mesh->update();
-        this->mesh->draw(assembly);
+        this->annotation = std::make_shared<DrawablePointAnnotation>();
         this->resetSelection();
         this->draw();
-        this->annotation = std::make_shared<DrawablePointAnnotation>();
     }
 }
 
