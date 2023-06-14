@@ -3,6 +3,7 @@
 
 #include <QVBoxLayout>
 #include <QLabel>
+#include <drawableannotation.hpp>
 
 #include <categorybutton.hpp>
 #include <attributewidget.hpp>
@@ -74,6 +75,17 @@ void MeasuresListWidget::update()
         pContainer->setDisabled(true);
         pCategory->addChild(pContainer);
         this->setItemWidget(pContainer, 0, pFrame);
+
+        auto showButton = new QPushButton("Show annotation");
+        showButton->setCheckable(true);
+        showButton->setChecked(std::dynamic_pointer_cast<DrawableAnnotation>(annotation)->getDrawAnnotation());
+        pLayout->addWidget(showButton);
+        buttonAnnotationMap.insert(std::make_pair(showButton, annotation));
+        connect(showButton, SIGNAL(clicked(bool)), this, SLOT(slotShowAnnotation(bool)));
+        auto deleteButton = new QPushButton("Delete annotation");
+        pLayout->addWidget(deleteButton);
+        buttonAnnotationMap.insert(std::make_pair(deleteButton, annotation));
+        connect(deleteButton, SIGNAL(clicked()), this, SLOT(slotDeleteAnnotation()));
     }
 }
 
@@ -90,6 +102,22 @@ void MeasuresListWidget::setMesh(std::shared_ptr<DrawableTriangleMesh>  value)
 void MeasuresListWidget::updateViewSlot()
 {
     emit updateViewSignal();
+}
+
+void MeasuresListWidget::slotShowAnnotation(bool checked)
+{
+    auto annotation = buttonAnnotationMap.at(static_cast<QPushButton*>(sender()));
+    std::dynamic_pointer_cast<DrawableAnnotation>(annotation)->setDrawAnnotation(checked);
+    emit(updateViewSignal());
+}
+
+void MeasuresListWidget::slotDeleteAnnotation()
+{
+    auto annotation = buttonAnnotationMap.at(static_cast<QPushButton*>(sender()));
+    mesh->removeAnnotation(annotation->getId());
+    emit(updateViewSignal());
+    update();
+
 }
 
 void MeasuresListWidget::updateSlot()

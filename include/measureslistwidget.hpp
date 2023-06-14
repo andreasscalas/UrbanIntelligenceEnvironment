@@ -3,6 +3,7 @@
 
 #include <drawabletrianglemesh.hpp>
 
+#include <QPushButton>
 #include <QTreeWidget>
 
 namespace Ui {
@@ -28,9 +29,12 @@ signals:
 private slots:
     void updateSlot();
     void updateViewSlot();
+    void slotShowAnnotation(bool);
+    void slotDeleteAnnotation();
 private:
     Ui::MeasuresListWidget *ui;
     std::shared_ptr<DrawableTriangleMesh>  mesh;
+    std::map<QPushButton*, std::shared_ptr<SemantisedTriangleMesh::Annotation> >  buttonAnnotationMap;
 };
 
 #endif // MEASURESLISTWIDGET_H
