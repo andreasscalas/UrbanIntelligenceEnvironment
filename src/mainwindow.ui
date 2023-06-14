@@ -154,6 +154,7 @@
    <addaction name="actionLinesSelection"/>
    <addaction name="actionTrianglesRectangleSelection"/>
    <addaction name="actionTrianglesLassoSelection"/>
+   <addaction name="actionclearSelection"/>
    <addaction name="separator"/>
    <addaction name="actionAnnotateSelection"/>
    <addaction name="actionSelectAnnotations"/>
@@ -415,6 +416,15 @@
    </property>
    <property name="text">
     <string>HeightMeasure</string>
+   </property>
+  </action>
+  <action name="actionclearSelection">
+   <property name="icon">
+    <iconset resource="../icons/icons.qrc">
+     <normaloff>:/Icons/clear.png</normaloff>:/Icons/clear.png</iconset>
+   </property>
+   <property name="text">
+    <string>clearSelection</string>
    </property>
   </action>
  </widget>

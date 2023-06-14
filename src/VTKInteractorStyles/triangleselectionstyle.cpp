@@ -218,6 +218,7 @@ void TriangleSelectionStyle::resetSelection(){
     for(uint i = 0; i < mesh->getTrianglesNumber(); i++){
         auto t = mesh->getTriangle(i);
         t->removeFlag(FlagType::SELECTED);
+        mesh->setTriangleColor(t->getId(), mesh->ORIGINAL_COLOR);
     }
 }
 

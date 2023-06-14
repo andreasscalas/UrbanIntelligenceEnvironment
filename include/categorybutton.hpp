@@ -10,6 +10,8 @@ class CategoryButton : public QPushButton
     public:
         CategoryButton(const QString& a_Text, QTreeWidget* a_pParent,
             QTreeWidgetItem* a_pItem);
+    signals:
+        void pressed(bool);
 
     private slots:
         void ButtonPressed();

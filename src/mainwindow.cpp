@@ -125,8 +125,8 @@ void MainWindow::drawMesh()
 void MainWindow::on_clearCanvasButton_clicked()
 {
     currentMesh.reset();
-    update();
     draw();
+    update();
 }
 
 const std::shared_ptr<DrawableTriangleMesh> &MainWindow::getCurrentMesh() const
@@ -237,6 +237,17 @@ void MainWindow::on_actionOpenAnnotations_triggered()
         manager.setMesh(currentMesh);
         auto annotations = manager.readAndStoreAnnotations(filename.toStdString());
         currentMesh->setAnnotations(annotations);
+        for(auto it = currentMesh->getAnnotations().begin(); it != currentMesh->getAnnotations().end(); it++)
+        {
+            auto attributes = (*it)->getAttributes();
+            for(auto att : attributes)
+            {
+                auto dbm = std::dynamic_pointer_cast<DrawableBoundingMeasure>(att);
+                if(dbm != nullptr)
+                    dbm->setDrawPlanes(false);
+            }
+
+        }
         reachedId = annotations.size();
 
         this->ui->measuresListWidget->setMesh(currentMesh);
@@ -861,4 +872,16 @@ void MainWindow::on_actionComputeAccessibility_triggered()
 
 }
 
+
+
+void MainWindow::on_actionclearSelection_triggered()
+{
+    if(selectVertices)
+        verticesSelectionStyle->resetSelection();
+    else if(selectEdges)
+        linesSelectionStyle->resetSelection();
+    else
+        trianglesSelectionStyle->resetSelection();
+    slotUpdateView();
+}
 

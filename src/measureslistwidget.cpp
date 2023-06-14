@@ -38,8 +38,9 @@ void MeasuresListWidget::update()
         auto annotation = mesh->getAnnotations()[i];
         QTreeWidgetItem* pCategory = new QTreeWidgetItem();
         this->addTopLevelItem(pCategory);
-        this->setItemWidget(pCategory, 0,
-            new CategoryButton("Annotation "+QString::number(std::stoi(annotation->getId())), this, pCategory));
+        auto cb = new CategoryButton("Annotation "+QString::number(std::stoi(annotation->getId())), this, pCategory);
+        this->setItemWidget(pCategory, 0, cb);
+        connect(cb, SIGNAL(pressed(bool)), this, SLOT(slotSelectAnnotation(bool)));
         QFrame* pFrame = new QFrame(this);
         QBoxLayout* pLayout = new QVBoxLayout(pFrame);
         pLayout->addWidget(new QLabel("id: "+QString::number(std::stoi(annotation->getId()))));
@@ -118,6 +119,15 @@ void MeasuresListWidget::slotDeleteAnnotation()
     emit(updateViewSignal());
     update();
 
+}
+
+void MeasuresListWidget::slotSelectAnnotation(bool selected)
+{
+    auto button = static_cast<CategoryButton*>(sender());
+    auto text = button->text().toStdString();
+    std::string id = text.substr(11, text.size());
+    std::dynamic_pointer_cast<DrawableAnnotation>(mesh->getAnnotation(id))->setSelected(selected);
+    emit(updateViewSignal());
 }
 
 void MeasuresListWidget::updateSlot()

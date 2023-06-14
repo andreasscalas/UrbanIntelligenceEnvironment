@@ -168,296 +168,303 @@
     <name>MainWindow</name>
     <message>
         <location filename="src/mainwindow.ui" line="14"/>
-        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="298"/>
-        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="298"/>
+        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="305"/>
+        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="305"/>
         <source>MainWindow</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/mainwindow.ui" line="66"/>
-        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="368"/>
-        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="368"/>
+        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="376"/>
+        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="376"/>
         <source>Annotations list</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/mainwindow.ui" line="108"/>
-        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="369"/>
-        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="369"/>
+        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="377"/>
+        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="377"/>
         <source>Clear canvas</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/mainwindow.ui" line="129"/>
-        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="370"/>
-        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="370"/>
+        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="378"/>
+        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="378"/>
         <source>File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/mainwindow.ui" line="142"/>
-        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="371"/>
-        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="371"/>
+        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="379"/>
+        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="379"/>
         <source>toolBar</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.ui" line="172"/>
-        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="299"/>
-        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="299"/>
+        <location filename="src/mainwindow.ui" line="173"/>
+        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="306"/>
+        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="306"/>
         <source>Open mesh</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.ui" line="177"/>
-        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="300"/>
-        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="300"/>
+        <location filename="src/mainwindow.ui" line="178"/>
+        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="307"/>
+        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="307"/>
         <source>Open annotations</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.ui" line="182"/>
-        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="301"/>
-        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="301"/>
+        <location filename="src/mainwindow.ui" line="183"/>
+        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="308"/>
+        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="308"/>
         <source>Save annotations</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.ui" line="194"/>
-        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="302"/>
-        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="302"/>
+        <location filename="src/mainwindow.ui" line="195"/>
+        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="309"/>
+        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="309"/>
         <source>VerticesSelection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.ui" line="197"/>
-        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="304"/>
-        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="304"/>
+        <location filename="src/mainwindow.ui" line="198"/>
+        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="311"/>
+        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="311"/>
         <source>Select vertices for annotation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.ui" line="200"/>
-        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="307"/>
-        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="307"/>
+        <location filename="src/mainwindow.ui" line="201"/>
+        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="314"/>
+        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="314"/>
         <source>V</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.ui" line="212"/>
-        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="309"/>
-        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="309"/>
+        <location filename="src/mainwindow.ui" line="213"/>
+        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="316"/>
+        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="316"/>
         <source>TrianglesRectangleSelection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.ui" line="215"/>
-        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="311"/>
-        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="311"/>
+        <location filename="src/mainwindow.ui" line="216"/>
+        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="318"/>
+        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="318"/>
         <source>Select triangles with rectangle selector</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.ui" line="227"/>
-        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="313"/>
-        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="313"/>
+        <location filename="src/mainwindow.ui" line="228"/>
+        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="320"/>
+        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="320"/>
         <source>TrianglesLassoSelection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.ui" line="230"/>
-        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="315"/>
-        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="315"/>
+        <location filename="src/mainwindow.ui" line="231"/>
+        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="322"/>
+        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="322"/>
         <source>Select triangles with lasso selector</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.ui" line="239"/>
-        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="317"/>
-        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="317"/>
+        <location filename="src/mainwindow.ui" line="240"/>
+        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="324"/>
+        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="324"/>
         <source>AnnotateSelection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.ui" line="242"/>
-        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="319"/>
-        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="319"/>
+        <location filename="src/mainwindow.ui" line="243"/>
+        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="326"/>
+        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="326"/>
         <source>Annotate selected primitives</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.ui" line="251"/>
-        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="321"/>
-        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="321"/>
+        <location filename="src/mainwindow.ui" line="252"/>
+        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="328"/>
+        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="328"/>
         <source>AnnotationRelation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.ui" line="254"/>
-        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="323"/>
-        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="323"/>
+        <location filename="src/mainwindow.ui" line="255"/>
+        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="330"/>
+        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="330"/>
         <source>Create a relation between selected annotations (min 2 annotations)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.ui" line="266"/>
-        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="325"/>
-        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="325"/>
+        <location filename="src/mainwindow.ui" line="267"/>
+        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="332"/>
+        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="332"/>
         <source>RemoveSelected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.ui" line="269"/>
-        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="327"/>
-        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="327"/>
+        <location filename="src/mainwindow.ui" line="270"/>
+        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="334"/>
+        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="334"/>
         <source>Remove primitives from selection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.ui" line="281"/>
-        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="329"/>
-        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="329"/>
+        <location filename="src/mainwindow.ui" line="282"/>
+        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="336"/>
+        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="336"/>
         <source>VisibleSelection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.ui" line="284"/>
-        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="331"/>
-        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="331"/>
+        <location filename="src/mainwindow.ui" line="285"/>
+        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="338"/>
+        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="338"/>
         <source>Select only visible primitives</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.ui" line="296"/>
-        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="333"/>
-        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="333"/>
+        <location filename="src/mainwindow.ui" line="297"/>
+        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="340"/>
+        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="340"/>
         <source>LinesSelection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.ui" line="299"/>
-        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="335"/>
-        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="335"/>
+        <location filename="src/mainwindow.ui" line="300"/>
+        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="342"/>
+        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="342"/>
         <source>Select edges for annotation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.ui" line="311"/>
-        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="337"/>
-        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="337"/>
+        <location filename="src/mainwindow.ui" line="312"/>
+        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="344"/>
+        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="344"/>
         <source>selectAnnotations</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.ui" line="314"/>
-        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="339"/>
-        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="339"/>
+        <location filename="src/mainwindow.ui" line="315"/>
+        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="346"/>
+        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="346"/>
         <source>Select annotations on mesh</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.ui" line="323"/>
-        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="341"/>
-        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="341"/>
+        <location filename="src/mainwindow.ui" line="324"/>
+        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="348"/>
+        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="348"/>
         <source>EditAnnotations</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.ui" line="326"/>
-        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="343"/>
-        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="343"/>
+        <location filename="src/mainwindow.ui" line="327"/>
+        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="350"/>
+        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="350"/>
         <source>Edit selected annotation (only one per time)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.ui" line="338"/>
-        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="345"/>
-        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="345"/>
+        <location filename="src/mainwindow.ui" line="339"/>
+        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="352"/>
+        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="352"/>
         <source>RulerMeasure</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.ui" line="341"/>
-        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="347"/>
-        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="347"/>
+        <location filename="src/mainwindow.ui" line="342"/>
+        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="354"/>
+        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="354"/>
         <source>Define Euclidean measure (as using a ruler)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.ui" line="353"/>
-        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="349"/>
-        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="349"/>
+        <location filename="src/mainwindow.ui" line="354"/>
+        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="356"/>
+        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="356"/>
         <source>MeasureTape</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.ui" line="356"/>
-        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="351"/>
-        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="351"/>
+        <location filename="src/mainwindow.ui" line="357"/>
+        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="358"/>
+        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="358"/>
         <source>Define geodesic measure (as using a measure tape)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.ui" line="368"/>
-        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="353"/>
-        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="353"/>
+        <location filename="src/mainwindow.ui" line="369"/>
+        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="360"/>
+        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="360"/>
         <source>CaliperMeasure</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.ui" line="371"/>
-        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="355"/>
-        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="355"/>
+        <location filename="src/mainwindow.ui" line="372"/>
+        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="362"/>
+        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="362"/>
         <source>Define Euclidean measure (as using a caliper)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.ui" line="380"/>
-        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="357"/>
-        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="357"/>
+        <location filename="src/mainwindow.ui" line="381"/>
+        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="364"/>
+        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="364"/>
         <source>Add measure</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.ui" line="383"/>
-        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="359"/>
-        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="359"/>
+        <location filename="src/mainwindow.ui" line="384"/>
+        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="366"/>
+        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="366"/>
         <source>Finalise measure</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.ui" line="388"/>
-        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="361"/>
-        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="361"/>
+        <location filename="src/mainwindow.ui" line="389"/>
+        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="368"/>
+        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="368"/>
         <source>Save relationships</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.ui" line="393"/>
-        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="362"/>
-        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="362"/>
+        <location filename="src/mainwindow.ui" line="394"/>
+        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="369"/>
+        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="369"/>
         <source>Open relationships</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.ui" line="402"/>
-        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="363"/>
-        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="363"/>
+        <location filename="src/mainwindow.ui" line="403"/>
+        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="370"/>
+        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="370"/>
         <source>ComputeAccessibility</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.ui" line="405"/>
-        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="365"/>
-        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="365"/>
+        <location filename="src/mainwindow.ui" line="406"/>
+        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="372"/>
+        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="372"/>
         <source>Launch the compute accessibility procedure</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.ui" line="417"/>
-        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="367"/>
-        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="367"/>
+        <location filename="src/mainwindow.ui" line="418"/>
+        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="374"/>
+        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="374"/>
         <source>HeightMeasure</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/mainwindow.ui" line="427"/>
+        <location filename="build-debug/UrIntEnv_autogen/include/ui_mainwindow.h" line="375"/>
+        <location filename="build-minSizeRelease/UrIntEnv_autogen/include/ui_mainwindow.h" line="375"/>
+        <source>clearSelection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -466,12 +473,12 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="727"/>
+        <location filename="src/mainwindow.cpp" line="738"/>
         <source>QInputDialog::getText()</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="728"/>
+        <location filename="src/mainwindow.cpp" line="739"/>
         <source>Attribute name:</source>
         <translation type="unfinished"></translation>
     </message>

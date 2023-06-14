@@ -31,6 +31,7 @@ private slots:
     void updateViewSlot();
     void slotShowAnnotation(bool);
     void slotDeleteAnnotation();
+    void slotSelectAnnotation(bool selected);
 private:
     Ui::MeasuresListWidget *ui;
     std::shared_ptr<DrawableTriangleMesh>  mesh;

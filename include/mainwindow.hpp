@@ -86,6 +86,8 @@ private slots:
     void on_actionComputeAccessibility_triggered();
 
 
+    void on_actionclearSelection_triggered();
+
 private:
     Ui::MainWindow *ui;
 
