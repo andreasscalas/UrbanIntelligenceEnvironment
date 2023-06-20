@@ -25,6 +25,7 @@ public:
 signals:
     void updateSignal();
     void updateViewSignal();
+    void selectAnnotation(std::string id, bool selected);
 
 private slots:
     void updateSlot();

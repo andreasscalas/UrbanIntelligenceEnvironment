@@ -126,8 +126,7 @@ void MeasuresListWidget::slotSelectAnnotation(bool selected)
     auto button = static_cast<CategoryButton*>(sender());
     auto text = button->text().toStdString();
     std::string id = text.substr(11, text.size());
-    std::dynamic_pointer_cast<DrawableAnnotation>(mesh->getAnnotation(id))->setSelected(selected);
-    emit(updateViewSignal());
+    emit(selectAnnotation(id, selected));
 }
 
 void MeasuresListWidget::updateSlot()

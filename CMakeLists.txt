@@ -62,6 +62,7 @@ set(PROJECT_SOURCES
         ${CMAKE_CURRENT_SOURCE_DIR}/src/mainwindow.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/annotationdialog.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/annotationrelationshipdialog.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/semanticattributedialog.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/measureslistwidget.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/attributewidget.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/annotationselectiondialog.cpp
@@ -81,6 +82,7 @@ set(PROJECT_HDRS
     ${CMAKE_CURRENT_SOURCE_DIR}/include/measureslistwidget.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/include/attributewidget.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/include/annotationselectiondialog.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/semanticattributedialog.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/include/categorybutton.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/include/VTKInteractorStyles/annotationselectioninteractorstyle.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/include/VTKInteractorStyles/lineselectionstyle.hpp
@@ -94,7 +96,8 @@ set(PROJECT_UI_SRC
     ${CMAKE_CURRENT_SOURCE_DIR}/src/measureslistwidget.ui
     ${CMAKE_CURRENT_SOURCE_DIR}/src/attributewidget.ui
     ${CMAKE_CURRENT_SOURCE_DIR}/src/annotationrelationshipdialog.ui
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/annotationselectiondialog.ui)
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/annotationselectiondialog.ui
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/semanticattributedialog.ui)
 
 set( QRCs ${CMAKE_SOURCE_DIR}/icons/icons.qrc )
 qt5_add_resources(QRC_Srcs ${QRCs} )

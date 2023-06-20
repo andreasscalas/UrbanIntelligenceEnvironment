@@ -7,6 +7,7 @@
 #include <annotation.hpp>
 #include <annotationdialog.hpp>
 #include <annotationrelationshipdialog.hpp>
+#include <semanticattributedialog.hpp>
 #include <annotationselectioninteractorstyle.hpp>
 #include <drawabletrianglemesh.hpp>
 #include <lineselectionstyle.hpp>
@@ -79,14 +80,21 @@ private slots:
 
     void slotAddAnnotationsRelationship(std::string, double, double, double, unsigned int, unsigned int, bool);
 
+    void slotAddSemanticAttribute(std::string, std::string);
+
     void on_actionSave_relationships_triggered();
 
     void on_actionOpen_relationships_triggered();
 
     void on_actionComputeAccessibility_triggered();
 
-
     void on_actionclearSelection_triggered();
+
+    void on_actionAddSemanticAttribute_triggered();
+
+    void on_pushButton_clicked();
+
+    void slotSelectAnnotation(std::string id, bool selected);
 
 private:
     Ui::MainWindow *ui;
@@ -101,6 +109,7 @@ private:
 
     std::shared_ptr<AnnotationDialog> annotationDialog;
     std::shared_ptr<AnnotationsRelationshipDialog> relationshipDialog;
+    std::shared_ptr<SemanticAttributeDialog> semanticAttributeDialog;
     std::shared_ptr<DrawableTriangleMesh> currentMesh;
     std::shared_ptr<SemantisedTriangleMesh::Annotation> annotationBeingModified;
     std::vector<std::shared_ptr<SemantisedTriangleMesh::Relationship> > annotationsRelationships;

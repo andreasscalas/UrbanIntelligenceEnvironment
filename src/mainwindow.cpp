@@ -22,6 +22,7 @@
 #include <qmessagebox.h>
 #include <QInputDialog>
 #include <drawableboundingmeasure.hpp>
+#include <semanticattribute.hpp>
 
 #include "annotationselectioninteractorstyle.hpp"
 #include "lineselectionstyle.hpp"
@@ -42,6 +43,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     annotationDialog = std::make_shared<AnnotationDialog>(this);
     relationshipDialog = std::make_shared<AnnotationsRelationshipDialog>(this);
+    semanticAttributeDialog = std::make_shared<SemanticAttributeDialog>(this);
     renderer = vtkSmartPointer<vtkRenderer>::New();
     canvas = vtkSmartPointer<vtkPropAssembly>::New();
 
@@ -68,6 +70,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(measureStyle, SIGNAL(updateView()), this, SLOT(slotUpdateView()));
     connect(annotationDialog.get(), SIGNAL(finalizationCalled(std::string, uchar*)), this, SLOT(slotFinalization(std::string, uchar*)));
     connect(relationshipDialog.get(), SIGNAL(addSemanticRelationship(std::string, double, double, double, unsigned int, unsigned int, bool)), this, SLOT(slotAddAnnotationsRelationship(std::string, double, double, double, unsigned int, unsigned int, bool)));
+    connect(semanticAttributeDialog.get(), SIGNAL(textFinalized(std::string, std::string)), this, SLOT(slotAddSemanticAttribute(std::string, std::string)));
     connect(ui->measuresListWidget, SIGNAL(updateSignal()), this, SLOT(slotUpdate()));
     connect(ui->measuresListWidget, SIGNAL(updateViewSignal()), this, SLOT(slotUpdateView()));
 
@@ -521,6 +524,28 @@ void MainWindow::slotAddAnnotationsRelationship(std::string type, double weight,
     slotUpdateView();
 }
 
+void MainWindow::slotAddSemanticAttribute(std::string key, std::string value)
+{
+    auto selected = currentMesh->getSelectedAnnotations();
+
+    if(selected.size() == 1){
+
+        auto attribute = std::make_shared<SemantisedTriangleMesh::SemanticAttribute>();
+        attribute->setId(selected[0]->getAttributes().size());
+        attribute->setIsGeometric(false);
+        attribute->setKey(key);
+        attribute->setValue(value);
+        selected[0]->addAttribute(attribute);
+        this->ui->measuresListWidget->update();
+        slotUpdateView();
+    } else {
+        QMessageBox* dialog = new QMessageBox(this);
+        dialog->setWindowTitle("Error");
+        dialog->setText("You need to select exactly one annotation");
+        dialog->show();
+    }
+}
+
 void MainWindow::slotFinalization(std::string tag, uchar * color)
 {
     std::string id;
@@ -548,6 +573,9 @@ void MainWindow::slotFinalization(std::string tag, uchar * color)
     auto height = std::make_shared<DrawableBoundingMeasure>();
     auto width = std::make_shared<DrawableBoundingMeasure>();
     auto depth = std::make_shared<DrawableBoundingMeasure>();
+    height->setIsGeometric(true);
+    width->setIsGeometric(true);
+    depth->setIsGeometric(true);
     auto o = std::make_shared<SemantisedTriangleMesh::Point>(0,0,0);
     for(unsigned int k = 0; k < involved.size(); k++)
         (*o) += *(involved[k]);
@@ -882,6 +910,29 @@ void MainWindow::on_actionclearSelection_triggered()
         linesSelectionStyle->resetSelection();
     else
         trianglesSelectionStyle->resetSelection();
+    slotUpdateView();
+}
+
+
+void MainWindow::on_actionAddSemanticAttribute_triggered()
+{
+    semanticAttributeDialog->show();
+
+}
+
+
+void MainWindow::on_pushButton_clicked()
+{
+    currentMesh->clearAnnotations();
+    this->ui->measuresListWidget->update();
+    slotUpdateView();
+
+}
+
+void MainWindow::slotSelectAnnotation(std::string id, bool selected)
+{
+
+    std::dynamic_pointer_cast<DrawableAnnotation>(currentMesh->getAnnotation(id))->setSelected(selected);
     slotUpdateView();
 }
 

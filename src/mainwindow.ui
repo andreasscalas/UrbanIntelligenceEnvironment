@@ -37,7 +37,7 @@
        </layout>
       </item>
       <item>
-       <layout class="QVBoxLayout" name="verticalLayout2" stretch="0,0">
+       <layout class="QVBoxLayout" name="verticalLayout2" stretch="0,0,0">
         <item>
          <layout class="QVBoxLayout" name="meshesToolbar">
           <item>
@@ -89,6 +89,13 @@
            </layout>
           </item>
          </layout>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton">
+          <property name="text">
+           <string>Clear annotations</string>
+          </property>
+         </widget>
         </item>
         <item>
          <widget class="QPushButton" name="clearCanvasButton">
@@ -165,6 +172,7 @@
    <addaction name="actionMeasureTape"/>
    <addaction name="actionCaliperMeasure"/>
    <addaction name="actionAddMeasure"/>
+   <addaction name="actionAddSemanticAttribute"/>
    <addaction name="separator"/>
    <addaction name="actionComputeAccessibility"/>
   </widget>
@@ -425,6 +433,18 @@
    </property>
    <property name="text">
     <string>clearSelection</string>
+   </property>
+  </action>
+  <action name="actionAddSemanticAttribute">
+   <property name="icon">
+    <iconset resource="../icons/icons.qrc">
+     <normaloff>:/Icons/text.png</normaloff>:/Icons/text.png</iconset>
+   </property>
+   <property name="text">
+    <string>addSemanticAttribute</string>
+   </property>
+   <property name="toolTip">
+    <string>Add a textual attribute to the annotation</string>
    </property>
   </action>
  </widget>

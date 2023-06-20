@@ -2,6 +2,7 @@
 #include "ui_attributewidget.h"
 
 #include <QLabel>
+#include <QTextEdit>
 #include <QVBoxLayout>
 #include <categorybutton.hpp>
 #include <semanticattribute.hpp>
@@ -40,10 +41,16 @@ void AttributeWidget::update()
         QBoxLayout* pLayout = new QVBoxLayout(pFrame);
         pLayout->addWidget(new QLabel("id: "+QString::number(attribute->getId())));
         pLayout->addWidget(new QLabel("tag: "+QString::fromStdString(attribute->getKey())));
-        if(std::dynamic_pointer_cast<SemanticAttribute>(attribute) == nullptr)
+        if(attribute->isGeometric())
             pLayout->addWidget(new QLabel("measure: "+QString::number(*static_cast<double*>(attribute->getValue()))));
         else
-            pLayout->addWidget(new QLabel("measure: "+QString::fromStdString(*static_cast<std::string*>(attribute->getValue()))));
+        {
+            QTextEdit* qte = new QTextEdit("text: "+QString::fromStdString(*static_cast<std::string*>(attribute->getValue())));
+            textEditAttributeMap.insert(std::make_pair(qte, attribute));
+            connect(qte, SIGNAL(textChanged()), this, SLOT(textEdited()));
+
+            pLayout->addWidget(qte);
+        }
         QPushButton* deletionButton =  new QPushButton("Remove attribute");
         buttonMeasureMap.insert(std::make_pair(deletionButton, attribute));
         this->connect(deletionButton, SIGNAL(clicked()), this, SLOT(deletionButtonClickedSlot()));
@@ -91,4 +98,17 @@ void AttributeWidget::deletionButtonClickedSlot()
     annotation->removeAttribute(drawable);
     emit updateViewSignal();
     update();
+}
+
+void AttributeWidget::textEdited()
+{
+    QTextEdit* textEdit = qobject_cast<QTextEdit *>(sender());
+    auto attribute = textEditAttributeMap.at(textEdit);
+    std::string text = textEdit->toPlainText().toStdString();
+    auto pos = text.find("text: ");
+    if(pos != std::string::npos)
+        text = text.substr(pos + 6);
+
+    attribute->setValue(text);
+
 }

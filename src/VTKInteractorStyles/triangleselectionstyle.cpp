@@ -300,7 +300,8 @@ void TriangleSelectionStyle::finalizeAnnotation(std::string id, string tag, unsi
     if(selectedTriangles.size() > 0){
 
         this->annotation->setId(id);
-        std::dynamic_pointer_cast<DrawableSurfaceAnnotation>(this->annotation)->setOutlines(mesh->getOutlines(selectedTriangles));
+        auto outlines = mesh->getOutlines(selectedTriangles);
+        std::dynamic_pointer_cast<DrawableSurfaceAnnotation>(this->annotation)->setOutlines(outlines);
         this->annotation->setColor(color);
         this->annotation->setTag(tag);
         std::dynamic_pointer_cast<DrawableSurfaceAnnotation>(this->annotation)->setMeshPoints(mesh->getMeshVertices());

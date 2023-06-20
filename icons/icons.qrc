@@ -42,6 +42,7 @@
         <file>add_measure.png</file>
         <file>accessibility.png</file>
         <file>height.png</file>
+        <file>text.png</file>
     </qresource>
     <qresource prefix="/">
         <file>redo.png</file>
