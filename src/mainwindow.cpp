@@ -43,6 +43,12 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    init();
+}
+
+void MainWindow::init()
+{
+
     annotationDialog = std::make_shared<AnnotationDialog>(this);
     relationshipDialog = std::make_shared<AnnotationsRelationshipDialog>(this);
     semanticAttributeDialog = std::make_shared<SemanticAttributeDialog>(this);

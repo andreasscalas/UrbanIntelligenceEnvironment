@@ -126,5 +126,6 @@ private:
     bool isAnnotationBeingModified;
 
     void drawMesh();
+    void init();
 };
 #endif // MAINWINDOW_H
