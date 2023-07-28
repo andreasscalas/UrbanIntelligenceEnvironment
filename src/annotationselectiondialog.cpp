@@ -2,6 +2,7 @@
 #include "ui_annotationselectiondialog.h"
 #include <qstringlistmodel.h>
 
+using namespace Drawables;
 AnnotationSelectionDialog::AnnotationSelectionDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::AnnotationSelectionDialog)

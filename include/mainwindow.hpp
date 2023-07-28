@@ -30,8 +30,8 @@ public:
 
     void draw();
 
-    const std::shared_ptr<DrawableTriangleMesh> &getCurrentMesh() const;
-    void setCurrentMesh(const std::shared_ptr<DrawableTriangleMesh> &newCurrentMesh);
+    const std::shared_ptr<Drawables::DrawableTriangleMesh> &getCurrentMesh() const;
+    void setCurrentMesh(const std::shared_ptr<Drawables::DrawableTriangleMesh> &newCurrentMesh);
 
 private slots:
     void on_clearCanvasButton_clicked();
@@ -110,7 +110,7 @@ private:
     std::shared_ptr<AnnotationDialog> annotationDialog;
     std::shared_ptr<AnnotationsRelationshipDialog> relationshipDialog;
     std::shared_ptr<SemanticAttributeDialog> semanticAttributeDialog;
-    std::shared_ptr<DrawableTriangleMesh> currentMesh;
+    std::shared_ptr<Drawables::DrawableTriangleMesh> currentMesh;
     std::shared_ptr<SemantisedTriangleMesh::Annotation> annotationBeingModified;
     std::vector<std::shared_ptr<SemantisedTriangleMesh::Relationship> > annotationsRelationships;
     std::string currentPath;

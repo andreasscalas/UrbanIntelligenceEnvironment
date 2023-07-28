@@ -1,6 +1,5 @@
 #include "measurestyle.hpp"
 #include "vtkRenderWindow.h"
-#include "vtkSphereSource.h"
 
 #include <geometricattribute.hpp>
 #include <drawableeuclideanmeasure.hpp>
@@ -26,6 +25,7 @@
 
 using namespace std;
 using namespace SemantisedTriangleMesh;
+using namespace Drawables;
 MeasureStyle::MeasureStyle()
 {
     measureStarted = false;
@@ -381,21 +381,18 @@ void MeasureStyle::OnLeftButtonDown()
                     {
                         measurePath.clear();
                         measure = 0.0;
-                        switch(measureType){
-                            case MeasureType::RULER:
-                            {
-                                measurePath.push_back(v);
-                                auto eucAtt = dynamic_pointer_cast<DrawableEuclideanMeasure>(onCreationAttribute);
-                                eucAtt->addMeasurePointID(std::stoi(v->getId()));
-                                eucAtt->addMeasurePointID(std::stoi(v->getId()));
-                                break;
-                            }
-                            case MeasureType::TAPE:
-                            {
-                                auto geoAtt = dynamic_pointer_cast<DrawableGeodesicMeasure>(onCreationAttribute);
-                                geoAtt->addMeasurePointID(std::stoi(v->getId()));
-                                break;
-                            }
+                        if(measureType == MeasureType::RULER)
+                        {
+                            measurePath.push_back(v);
+                            auto eucAtt = dynamic_pointer_cast<DrawableEuclideanMeasure>(onCreationAttribute);
+                            eucAtt->addMeasurePointID(std::stoi(v->getId()));
+                            eucAtt->addMeasurePointID(std::stoi(v->getId()));
+                            break;
+                        } else if (measureType == MeasureType::TAPE)
+                        {
+                            auto geoAtt = dynamic_pointer_cast<DrawableGeodesicMeasure>(onCreationAttribute);
+                            geoAtt->addMeasurePointID(std::stoi(v->getId()));
+                            break;
                         }
 
                         measureStarted = true;
@@ -404,15 +401,14 @@ void MeasureStyle::OnLeftButtonDown()
                     {
                         auto start = last;
                         auto end = v;
-                        switch(measureType){
-                            case MeasureType::RULER:
-                                manageRulerMovement(start, end);
-                                break;
-                            case MeasureType::TAPE:
-                                manageTapeMovement(start, end);
-                                last = end;
-                                break;
+                        if(measureType == MeasureType::RULER)
+                            manageRulerMovement(start, end);
+                        else if (measureType == MeasureType::TAPE)
+                        {
+                            manageTapeMovement(start, end);
+                            last = end;
                         }
+
                     }
 
                     onCreationAttribute->update();

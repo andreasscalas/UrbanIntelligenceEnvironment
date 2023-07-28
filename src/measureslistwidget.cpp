@@ -9,6 +9,7 @@
 #include <attributewidget.hpp>
 
 using namespace  SemantisedTriangleMesh;
+using namespace Drawables;
 
 MeasuresListWidget::MeasuresListWidget(QWidget *parent) :
     QTreeWidget(parent),

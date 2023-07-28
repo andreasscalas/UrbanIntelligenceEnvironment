@@ -38,10 +38,10 @@ public:
 
     void reset();
 
-    std::shared_ptr<DrawableAttribute>  finalizeAttribute(unsigned int id, std::string key);
+    std::shared_ptr<Drawables::DrawableAttribute>  finalizeAttribute(unsigned int id, std::string key);
     //Getters and setters
-    std::shared_ptr<DrawableTriangleMesh> getMesh() const;
-    void setMesh(std::shared_ptr<DrawableTriangleMesh> value);
+    std::shared_ptr<Drawables::DrawableTriangleMesh> getMesh() const;
+    void setMesh(std::shared_ptr<Drawables::DrawableTriangleMesh> value);
     QVTKOpenGLNativeWidget *getQvtkwidget() const;
     void setQvtkwidget(QVTKOpenGLNativeWidget *value);
     vtkSmartPointer<vtkRenderer> getMeshRenderer() const;
@@ -51,7 +51,7 @@ public:
     double getMeasure() const;
     std::vector<std::shared_ptr<SemantisedTriangleMesh::Vertex>> getMeasurePath() const;
     std::shared_ptr<SemantisedTriangleMesh::Point> getBoundingDirection() const;
-    std::shared_ptr<DrawableAttribute> getOnCreationAttribute() const;
+    std::shared_ptr<Drawables::DrawableAttribute> getOnCreationAttribute() const;
 
     bool getDrawAttributes() const;
     void setDrawAttributes(bool value);
@@ -64,7 +64,7 @@ public:
 signals:
     void updateView();
 protected:
-    std::shared_ptr<DrawableTriangleMesh> mesh;
+    std::shared_ptr<Drawables::DrawableTriangleMesh> mesh;
     QVTKOpenGLNativeWidget* qvtkwidget;
     vtkSmartPointer<vtkCellPicker> cellPicker;
     vtkSmartPointer<vtkRenderer> meshRenderer;
@@ -75,7 +75,7 @@ protected:
     std::shared_ptr<SemantisedTriangleMesh::Point> boundingBegin, boundingEnd, boundingOrigin;
     bool measureStarted, leftPressed, middlePressed, drawAttributes;
     double measure;
-    std::shared_ptr<DrawableAttribute> onCreationAttribute;
+    std::shared_ptr<Drawables::DrawableAttribute> onCreationAttribute;
 
 };
 

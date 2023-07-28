@@ -17,11 +17,10 @@
 #include <vtkLine.h>
 #include <vtkWorldPointPicker.h>
 
-#include <chrono>
-using namespace std::chrono;
 
 using namespace std;
 using namespace SemantisedTriangleMesh;
+using namespace Drawables;
 
 TriangleSelectionStyle::TriangleSelectionStyle(){
     selectionMode = true;

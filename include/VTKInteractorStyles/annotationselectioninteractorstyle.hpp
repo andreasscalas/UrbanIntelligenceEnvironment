@@ -43,8 +43,8 @@ public:
 
     const std::vector<std::shared_ptr<SemantisedTriangleMesh::Annotation> > &getSelectedAnnotations() const;
 
-    const std::shared_ptr<DrawableTriangleMesh> &getMesh() const;
-    void setMesh(const std::shared_ptr<DrawableTriangleMesh> &newMesh);
+    const std::shared_ptr<Drawables::DrawableTriangleMesh> &getMesh() const;
+    void setMesh(const std::shared_ptr<Drawables::DrawableTriangleMesh> &newMesh);
 
 
 signals:
@@ -59,7 +59,7 @@ protected:
 
     QVTKOpenGLNativeWidget * qvtkWidget;
 
-    std::shared_ptr<DrawableTriangleMesh> mesh;
+    std::shared_ptr<Drawables::DrawableTriangleMesh> mesh;
     double tolerance;
     vtkIdType reachedID;
 };

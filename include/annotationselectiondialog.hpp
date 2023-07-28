@@ -16,18 +16,18 @@ public:
     explicit AnnotationSelectionDialog(QWidget *parent = nullptr);
     ~AnnotationSelectionDialog();
 
-    const std::vector<std::shared_ptr<DrawableAnnotation> > &getAnnotationsList() const;
-    void setAnnotationsList(const std::vector<std::shared_ptr<DrawableAnnotation> > &newAnnotationsList);
+    const std::vector<std::shared_ptr<Drawables::DrawableAnnotation> > &getAnnotationsList() const;
+    void setAnnotationsList(const std::vector<std::shared_ptr<Drawables::DrawableAnnotation> > &newAnnotationsList);
 
-    const std::shared_ptr<DrawableAnnotation> &getSelectedAnnotation() const;
+    const std::shared_ptr<Drawables::DrawableAnnotation> &getSelectedAnnotation() const;
 
 private slots:
     void on_selectAnnotationButton_clicked();
 
 private:
     Ui::AnnotationSelectionDialog *ui;
-    std::vector<std::shared_ptr<DrawableAnnotation>> annotationsList;
-    std::shared_ptr<DrawableAnnotation> selectedAnnotation;
+    std::vector<std::shared_ptr<Drawables::DrawableAnnotation>> annotationsList;
+    std::shared_ptr<Drawables::DrawableAnnotation> selectedAnnotation;
 };
 
 #endif // ANNOTATIONSELECTIONDIALOG_H

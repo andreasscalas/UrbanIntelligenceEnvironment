@@ -19,8 +19,8 @@ public:
     ~MeasuresListWidget();
 
     void update();
-    std::shared_ptr<DrawableTriangleMesh> getMesh() const;
-    void setMesh(std::shared_ptr<DrawableTriangleMesh> value);
+    std::shared_ptr<Drawables::DrawableTriangleMesh> getMesh() const;
+    void setMesh(std::shared_ptr<Drawables::DrawableTriangleMesh> value);
 
 signals:
     void updateSignal();
@@ -35,7 +35,7 @@ private slots:
     void slotSelectAnnotation(bool selected);
 private:
     Ui::MeasuresListWidget *ui;
-    std::shared_ptr<DrawableTriangleMesh>  mesh;
+    std::shared_ptr<Drawables::DrawableTriangleMesh>  mesh;
     std::map<QPushButton*, std::shared_ptr<SemantisedTriangleMesh::Annotation> >  buttonAnnotationMap;
 };
 

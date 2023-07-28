@@ -7,6 +7,8 @@
 
 using namespace std;
 using namespace SemantisedTriangleMesh;
+using namespace Drawables;
+
 AnnotationSelectionInteractorStyle::AnnotationSelectionInteractorStyle()
 {
     this->cellPicker = vtkSmartPointer<vtkCellPicker>::New();

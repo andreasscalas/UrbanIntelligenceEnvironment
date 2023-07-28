@@ -70,8 +70,8 @@ public:
     QVTKOpenGLNativeWidget *getQvtkwidget() const;
     void setQvtkwidget(QVTKOpenGLNativeWidget *value);
 
-    const std::shared_ptr<DrawableTriangleMesh> &getMesh() const;
-    void setMesh(const std::shared_ptr<DrawableTriangleMesh> &newMesh);
+    const std::shared_ptr<Drawables::DrawableTriangleMesh> &getMesh() const;
+    void setMesh(const std::shared_ptr<Drawables::DrawableTriangleMesh> &newMesh);
 
 signals:
     void updateView();
@@ -91,8 +91,8 @@ protected:
     vtkSmartPointer<vtkCellPicker> cellPicker;
     std::shared_ptr<SemantisedTriangleMesh::Vertex> firstVertex;
     std::shared_ptr<SemantisedTriangleMesh::Vertex> lastVertex;
-    std::shared_ptr<DrawableTriangleMesh> mesh;
-    std::shared_ptr<DrawableLineAnnotation> annotation;
+    std::shared_ptr<Drawables::DrawableTriangleMesh> mesh;
+    std::shared_ptr<Drawables::DrawableLineAnnotation> annotation;
     double sphereRadius;
     double tolerance;
     bool selectionMode;

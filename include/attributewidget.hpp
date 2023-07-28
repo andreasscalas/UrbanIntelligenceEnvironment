@@ -1,8 +1,6 @@
 #ifndef ATTRIBUTEWIDGET_H
 #define ATTRIBUTEWIDGET_H
 
-#include "drawableattribute.hpp"
-
 #include <QPushButton>
 #include <QTextEdit>
 #include <QTreeWidget>

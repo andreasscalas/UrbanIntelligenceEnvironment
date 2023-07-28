@@ -19,6 +19,7 @@
 
 using namespace std;
 using namespace SemantisedTriangleMesh;
+using namespace Drawables;
 
 VerticesSelectionStyle::VerticesSelectionStyle() {
 

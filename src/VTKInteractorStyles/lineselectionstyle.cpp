@@ -10,6 +10,8 @@
 
 using namespace std;
 using namespace SemantisedTriangleMesh;
+using namespace Drawables;
+
 LineSelectionStyle::LineSelectionStyle()
 {
     selectionMode = true;

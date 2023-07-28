@@ -62,8 +62,8 @@ public:
     std::map<unsigned long, bool> *getPointsSelectionStatus() const;
     void setPointsSelectionStatus(std::map<unsigned long, bool> *value);
 
-    const std::shared_ptr<DrawableTriangleMesh> &getMesh() const;
-    void setMesh(const std::shared_ptr<DrawableTriangleMesh> &newMesh);
+    const std::shared_ptr<Drawables::DrawableTriangleMesh> &getMesh() const;
+    void setMesh(const std::shared_ptr<Drawables::DrawableTriangleMesh> &newMesh);
 
 
     vtkSmartPointer<vtkRenderer> getRenderer() const;
@@ -85,8 +85,8 @@ private:
     bool visiblePointsOnly;
     bool leftPressed;
     double sphereRadius;
-    std::shared_ptr<DrawableTriangleMesh> mesh;
-    std::shared_ptr<DrawablePointAnnotation> annotation;
+    std::shared_ptr<Drawables::DrawableTriangleMesh> mesh;
+    std::shared_ptr<Drawables::DrawablePointAnnotation> annotation;
 
 };
 

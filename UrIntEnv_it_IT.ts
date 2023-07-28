@@ -489,17 +489,17 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="147"/>
+        <location filename="src/mainwindow.cpp" line="149"/>
         <source>Context menu</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="766"/>
+        <location filename="src/mainwindow.cpp" line="769"/>
         <source>QInputDialog::getText()</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="767"/>
+        <location filename="src/mainwindow.cpp" line="770"/>
         <source>Attribute name:</source>
         <translation type="unfinished"></translation>
     </message>

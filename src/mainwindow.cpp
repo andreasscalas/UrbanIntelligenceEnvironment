@@ -14,7 +14,7 @@
 
 #include <drawablesurfaceannotation.hpp>
 #include <drawablepointannotation.hpp>
-#include <annotationfilemanager.hpp>
+#include <semanticsfilemanager.hpp>
 #include <QFileDialog>
 #include <vtkAreaPicker.h>
 #include <vtkIdFilter.h>
@@ -35,6 +35,8 @@ vtkStandardNewMacro(AnnotationSelectionInteractorStyle)
 vtkStandardNewMacro(VerticesSelectionStyle)
 vtkStandardNewMacro(TriangleSelectionStyle)
 vtkStandardNewMacro(LineSelectionStyle)
+
+using namespace Drawables;
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -236,7 +238,7 @@ void MainWindow::on_actionOpenAnnotations_triggered()
          "ANT(*.ant);;FCT(*.fct);;TRIANT(*.triant);;All(*.*)");
     if(!filename.isEmpty() && currentMesh != nullptr)
     {
-        SemantisedTriangleMesh::AnnotationFileManager manager;
+        SemantisedTriangleMesh::SemanticsFileManager manager;
         manager.setMesh(currentMesh);
         auto annotations = manager.readAndStoreAnnotations(filename.toStdString());
         currentMesh->setAnnotations(annotations);
@@ -272,7 +274,7 @@ void MainWindow::on_actionSaveAnnotations_triggered()
 
       QFileInfo info(filename);
       currentPath = info.absolutePath().toStdString();
-      SemantisedTriangleMesh::AnnotationFileManager manager;
+      SemantisedTriangleMesh::SemanticsFileManager manager;
       manager.setMesh(currentMesh);
       if(!manager.writeAnnotations(filename.toStdString()))
           std::cout << "Something went wrong during annotation file writing." << std::endl << std::flush;
@@ -447,6 +449,7 @@ void MainWindow::on_actionTrianglesLassoSelection_triggered(bool checked)
         this->ui->actionRulerMeasure->setChecked(false);
         this->ui->actionMeasureTape->setChecked(false);
         this->ui->actionCaliperMeasure->setChecked(false);
+
     }
 }
 
@@ -768,6 +771,7 @@ void MainWindow::on_actionAddMeasure_triggered()
                                                  "Attribute name", &ok);
         if (ok && !text.isEmpty()){
             auto attribute = measureStyle->finalizeAttribute(selected[0]->getAttributes().size(), text.toStdString());
+            attribute->setIsGeometric(true);
             selected[0]->addAttribute(attribute);
         }
 
@@ -810,7 +814,7 @@ void MainWindow::on_actionSave_relationships_triggered()
 
       QFileInfo info(filename);
       currentPath = info.absolutePath().toStdString();
-      SemantisedTriangleMesh::AnnotationFileManager manager;
+      SemantisedTriangleMesh::SemanticsFileManager manager;
       manager.setMesh(currentMesh);
       if(!manager.writeRelationships(filename.toStdString()))
           std::cout << "Something went wrong during relationships file writing." << std::endl << std::flush;
@@ -829,7 +833,7 @@ void MainWindow::on_actionOpen_relationships_triggered()
 
       QFileInfo info(filename);
       currentPath = info.absolutePath().toStdString();
-      SemantisedTriangleMesh::AnnotationFileManager manager;
+      SemantisedTriangleMesh::SemanticsFileManager manager;
       manager.setMesh(currentMesh);
       if(!manager.readRelationships(filename.toStdString()))
           std::cout << "Something went wrong during relationships file load." << std::endl << std::flush;
@@ -868,7 +872,7 @@ void MainWindow::on_actionComputeAccessibility_triggered()
             annotationsFilename.append("/annotations.ant");
             std::string relationsFilename = dir;
             relationsFilename.append("/relations.rel");
-            SemantisedTriangleMesh::AnnotationFileManager manager;
+            SemantisedTriangleMesh::SemanticsFileManager manager;
             manager.setMesh(currentMesh);
             uint annRetValue = manager.writeAnnotations(annotationsFilename);
             uint relRetValue = manager.writeRelationships(relationsFilename);

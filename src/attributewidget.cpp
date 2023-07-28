@@ -5,9 +5,11 @@
 #include <QTextEdit>
 #include <QVBoxLayout>
 #include <categorybutton.hpp>
+#include <drawableattribute.hpp>
 #include <semanticattribute.hpp>
 
 using namespace SemantisedTriangleMesh;
+using namespace Drawables;
 
 AttributeWidget::AttributeWidget(QWidget *parent):
     QTreeWidget(parent),

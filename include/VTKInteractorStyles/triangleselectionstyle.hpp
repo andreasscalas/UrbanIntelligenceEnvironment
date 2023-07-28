@@ -70,8 +70,8 @@ public:
     const std::shared_ptr<SemantisedTriangleMesh::Vertex> &getLastVertex() const;
     void setLastVertex(const std::shared_ptr<SemantisedTriangleMesh::Vertex> &newLastVertex);
 
-    const std::shared_ptr<DrawableTriangleMesh> &getMesh() const;
-    void setMesh(const std::shared_ptr<DrawableTriangleMesh> &newMesh);
+    const std::shared_ptr<Drawables::DrawableTriangleMesh> &getMesh() const;
+    void setMesh(const std::shared_ptr<Drawables::DrawableTriangleMesh> &newMesh);
 
     const std::vector<std::shared_ptr<SemantisedTriangleMesh::Vertex> > &getPolygonContour() const;
     void setPolygonContour(const std::vector<std::shared_ptr<SemantisedTriangleMesh::Vertex> > &newPolygonContour);
@@ -98,7 +98,7 @@ private:
         bool lasso_started;
         SelectionType selectionType;
         std::shared_ptr<SemantisedTriangleMesh::Annotation> annotation;
-        std::shared_ptr<DrawableTriangleMesh> mesh;
+        std::shared_ptr<Drawables::DrawableTriangleMesh> mesh;
         std::shared_ptr<SemantisedTriangleMesh::Vertex> firstVertex;
         std::shared_ptr<SemantisedTriangleMesh::Vertex> lastVertex;
         std::shared_ptr<SemantisedTriangleMesh::Vertex> innerVertex;
